@@ -1,0 +1,64 @@
+<div class="p-4">
+  <div class="flex items-center gap-3 mb-4">
+    <a mat-icon-button routerLink="/houses" aria-label="Back to Houses">
+      <mat-icon>arrow_back</mat-icon>
+    </a>
+    <h1 class="text-2xl font-bold m-0">My Favorites</h1>
+  </div>
+
+  @if (favoritesStore.favoriteIds().length === 0) {
+    <div class="flex flex-col items-center gap-3 py-16 text-center">
+      <mat-icon class="text-6xl text-gray-300" aria-hidden="true">favorite_border</mat-icon>
+      <p class="text-xl font-semibold">No favorites yet</p>
+      <p class="text-gray-500">
+        Browse <a routerLink="/houses" class="underline font-medium">Houses of Westeros</a> and
+        click the heart icon to save your favorites.
+      </p>
+    </div>
+  } @else {
+    @if (pendingCount() > 0) {
+      <div class="flex items-center gap-2 mb-4 text-gray-500">
+        <mat-spinner diameter="20" />
+        <span>Loading {{ pendingCount() }} house{{ pendingCount() === 1 ? '' : 's' }}…</span>
+      </div>
+    }
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      @for (house of favoriteHouses(); track house.url) {
+        <mat-card class="flex flex-col">
+          <mat-card-header>
+            <mat-card-title>{{ house.name }}</mat-card-title>
+            @if (house.region) {
+              <mat-card-subtitle>{{ house.region }}</mat-card-subtitle>
+            }
+          </mat-card-header>
+          <mat-card-content class="flex-1">
+            @if (house.words) {
+              <p class="italic mt-2">{{ house.words }}</p>
+            }
+            @if (house.seats[0]) {
+              <p class="text-sm text-gray-500">{{ house.seats[0] }}</p>
+            }
+          </mat-card-content>
+          <mat-card-actions class="flex justify-between items-center">
+            <a
+              mat-button
+              [routerLink]="['/houses', houseIdFromUrl(house.url)]"
+              aria-label="View details for {{ house.name }}"
+            >
+              <mat-icon>info</mat-icon>
+              View Details
+            </a>
+            <button
+              mat-icon-button
+              [attr.aria-label]="'Remove ' + house.name + ' from favorites'"
+              (click)="favoritesStore.toggleFavorite(houseIdFromUrl(house.url))"
+            >
+              <mat-icon>favorite</mat-icon>
+            </button>
+          </mat-card-actions>
+        </mat-card>
+      }
+    </div>
+  }
+</div>

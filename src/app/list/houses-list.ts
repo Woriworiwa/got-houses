@@ -13,11 +13,13 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { houseIdFromUrl } from '../../../core/models/house.model';
 import { HousesStore, SearchMode } from '../houses.store';
+import { FavoritesStore } from '../../favorites/favorites.store';
 
 @Component({
   selector: 'app-houses-list',
@@ -32,15 +34,17 @@ import { HousesStore, SearchMode } from '../houses.store';
     MatFormFieldModule,
     MatInputModule,
     MatIconModule,
+    MatButtonModule,
     MatButtonToggleModule,
   ],
 })
 export class HousesListComponent implements OnInit {
   protected readonly store = inject(HousesStore);
+  protected readonly favoritesStore = inject(FavoritesStore);
   private readonly destroyRef = inject(DestroyRef);
 
   protected readonly houseIdFromUrl = houseIdFromUrl;
-  protected readonly displayedColumns = ['name', 'region', 'words', 'seats'];
+  protected readonly displayedColumns = ['name', 'region', 'words', 'seats', 'favorite'];
   protected readonly searchControl = new FormControl('');
 
   protected readonly houses = this.store.displayedHouses;

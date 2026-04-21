@@ -178,10 +178,23 @@ export const HousesStore = signalStore(
       ),
     );
 
+    const preloadHouse = rxMethod<number>(
+      pipe(
+        switchMap((id) => {
+          if (store.entityMap()[id]) return EMPTY;
+          return api.getHouse(id).pipe(
+            tap((house) => patchState(store, (state) => ({ ...upsertHouses(state, [house]) }))),
+            catchError(() => EMPTY),
+          );
+        }),
+      ),
+    );
+
     return {
       loadHouses,
       loadAllHouses,
       loadHouseDetail,
+      preloadHouse,
 
       setSearchMode(mode: SearchMode): void {
         patchState(store, {

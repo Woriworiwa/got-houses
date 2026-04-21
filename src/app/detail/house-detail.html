@@ -16,6 +16,14 @@
         @if (h.region) {
           <mat-card-subtitle>{{ h.region }}</mat-card-subtitle>
         }
+        <button
+          mat-icon-button
+          class="ml-auto"
+          [attr.aria-label]="isFavorite() ? 'Remove from favorites' : 'Add to favorites'"
+          (click)="toggleFavorite()"
+        >
+          <mat-icon>{{ isFavorite() ? 'favorite' : 'favorite_border' }}</mat-icon>
+        </button>
       </mat-card-header>
 
       <mat-card-content class="mt-4">
