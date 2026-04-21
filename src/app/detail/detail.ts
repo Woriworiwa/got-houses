@@ -6,7 +6,7 @@ import { houseIdFromUrl } from '../core/models/house.model';
 
 @Component({
   selector: 'app-house-detail',
-  templateUrl: './house-detail.html',
+  templateUrl: './detail.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [RouterLink],
 })

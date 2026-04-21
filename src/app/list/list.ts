@@ -14,7 +14,7 @@ import { SearchComponent } from '../shared/search/search';
 
 @Component({
   selector: 'app-houses-list',
-  templateUrl: './houses-list.html',
+  templateUrl: './list.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [RouterLink, PaginationComponent, SearchComponent],
 })

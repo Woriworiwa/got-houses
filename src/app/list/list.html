@@ -1,6 +1,5 @@
 <main class="max-w-7xl mx-auto px-6 md:px-12 py-12 md:py-20">
 
-  <!-- Hero Search -->
   <section class="flex flex-col items-center mb-16" aria-label="Search">
     <h1 class="font-newsreader text-display-lg text-on-surface text-center mb-8">The Great Houses</h1>
 
@@ -13,21 +12,14 @@
     />
   </section>
 
-  <!-- Loading -->
   @if (loading()) {
     <div class="flex justify-center py-20" role="status" aria-label="Loading houses">
       <div class="w-12 h-12 border-4 border-primary-container border-t-primary rounded-full animate-spin"></div>
     </div>
-
-  <!-- Error -->
   } @else if (error()) {
     <p class="text-error text-center py-12 font-inter text-body-md" role="alert">{{ error() }}</p>
-
-  <!-- Empty -->
   } @else if (houses().length === 0) {
     <p class="text-center py-20 font-inter text-body-md text-on-surface-variant">No houses found.</p>
-
-  <!-- Houses grid -->
   } @else {
     <section
       class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter mb-20"

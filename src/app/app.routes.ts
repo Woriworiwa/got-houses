@@ -3,11 +3,11 @@ import { Routes } from '@angular/router';
 export const routes: Routes = [
   {
     path: 'houses',
-    loadComponent: () => import('./list/houses-list').then((m) => m.HousesListComponent),
+    loadComponent: () => import('./list/list').then((m) => m.HousesListComponent),
   },
   {
     path: 'houses/:id',
-    loadComponent: () => import('./detail/house-detail').then((m) => m.HouseDetailComponent),
+    loadComponent: () => import('./detail/detail').then((m) => m.HouseDetailComponent),
   },
   {
     path: 'favorites',
