@@ -1,0 +1,41 @@
+<nav class="flex justify-center items-center gap-2 pb-8" aria-label="Pagination">
+  <button
+    type="button"
+    class="w-10 h-10 flex items-center justify-center rounded-lg border border-outline-variant text-on-surface-variant hover:bg-surface-container transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+    [disabled]="currentPage() <= 1"
+    (click)="onPageClick(currentPage() - 1)"
+    aria-label="Previous page"
+  >
+    <span class="material-symbols-outlined" aria-hidden="true">chevron_left</span>
+  </button>
+
+  @for (page of pageNumbers(); track $index) {
+    @if (page === -1) {
+      <span class="w-10 flex items-center justify-center text-on-surface-variant font-inter" aria-hidden="true">…</span>
+    } @else {
+      <button
+        type="button"
+        class="w-10 h-10 flex items-center justify-center rounded-lg font-inter text-label-lg transition-colors"
+        [class.bg-primary-container]="page === currentPage()"
+        [class.text-on-primary-container]="page === currentPage()"
+        [class.border]="page !== currentPage()"
+        [class.border-outline-variant]="page !== currentPage()"
+        [class.text-on-surface-variant]="page !== currentPage()"
+        [class.hover:bg-surface-container]="page !== currentPage()"
+        [attr.aria-label]="'Page ' + page"
+        [attr.aria-current]="page === currentPage() ? 'page' : null"
+        (click)="onPageClick(page)"
+      >{{ page }}</button>
+    }
+  }
+
+  <button
+    type="button"
+    class="w-10 h-10 flex items-center justify-center rounded-lg border border-outline-variant text-on-surface-variant hover:bg-surface-container transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+    [disabled]="currentPage() >= totalPages()"
+    (click)="onPageClick(currentPage() + 1)"
+    aria-label="Next page"
+  >
+    <span class="material-symbols-outlined" aria-hidden="true">chevron_right</span>
+  </button>
+</nav>

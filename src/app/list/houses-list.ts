@@ -14,12 +14,13 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { House, houseIdFromUrl } from '../core/models/house.model';
 import { HousesStore } from '../core/stores/houses.store';
 import { FavoritesStore } from '../core/stores/favorites.store';
+import { PaginationComponent } from '../shared/pagination/pagination';
 
 @Component({
   selector: 'app-houses-list',
   templateUrl: './houses-list.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [ReactiveFormsModule, RouterLink, PaginationComponent],
 })
 export class HousesListComponent implements OnInit {
   protected readonly store = inject(HousesStore);
@@ -41,27 +42,8 @@ export class HousesListComponent implements OnInit {
     Math.max(1, Math.ceil(this.totalCount() / this.pagination().pageSize)),
   );
 
-  protected readonly pageNumbers = computed((): (number | -1)[] => {
-    const total = this.totalPages();
-    const current = this.pagination().currentPage;
-
-    if (total <= 7) {
-      return Array.from({ length: total }, (_, i) => i + 1);
-    }
-
-    const pages: (number | -1)[] = [1];
-    if (current > 3) pages.push(-1);
-    const start = Math.max(2, current - 1);
-    const end = Math.min(total - 1, current + 1);
-    for (let p = start; p <= end; p++) pages.push(p);
-    if (current < total - 2) pages.push(-1);
-    pages.push(total);
-
-    return pages;
-  });
-
   ngOnInit(): void {
-    this.store.loadHouses({ page: 1, pageSize: 10 });
+    this.store.loadHouses({ page: 1, pageSize: 9 });
 
     this.searchControl.valueChanges
       .pipe(takeUntilDestroyed(this.destroyRef), debounceTime(300), distinctUntilChanged())
@@ -95,7 +77,6 @@ export class HousesListComponent implements OnInit {
   }
 
   protected onPageChange(page: number): void {
-    const { pageSize } = this.pagination();
-    this.store.loadHouses({ page, pageSize, name: this.store.name() });
+    this.store.loadHouses({ page, pageSize: this.pagination().pageSize, name: this.store.name() });
   }
 }
