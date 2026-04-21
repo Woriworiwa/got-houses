@@ -64,7 +64,6 @@ export const housesReducer = createReducer(
   on(HousesActions.setSearchMode, (state, { mode }) => ({
     ...state,
     searchMode: mode,
-    name: '',
     pagination: { ...state.pagination, currentPage: 1 },
   })),
   on(HousesActions.setSearchName, (state, { name }) => ({

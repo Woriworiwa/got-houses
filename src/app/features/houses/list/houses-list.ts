@@ -82,8 +82,11 @@ export class HousesListComponent implements OnInit, OnDestroy {
   }
 
   protected onModeChange(mode: SearchMode): void {
-    this.searchControl.setValue('', { emitEvent: false });
     this.store.dispatch(setSearchMode({ mode }));
+    const term = this.searchControl.value ?? '';
+    if (term) {
+      this.store.dispatch(setSearchName({ name: term }));
+    }
   }
 
   protected onPageChange(event: PageEvent): void {

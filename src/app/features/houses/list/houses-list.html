@@ -1,7 +1,13 @@
-<div style="padding: 16px;">
+<div class="p-4">
   <h1>Houses of Westeros</h1>
 
-  <div style="display: flex; gap: 16px; flex-wrap: wrap; align-items: flex-start; margin-bottom: 16px;">
+  <div class="flex flex-wrap items-start gap-4 mb-4">
+    <mat-form-field appearance="outline" class="flex-1 min-w-[200px]">
+      <mat-label>Search by name</mat-label>
+      <input matInput [formControl]="searchControl" [placeholder]="searchMode() === 'exact' ? 'e.g. House Algood' : 'e.g. rose'" />
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+
     <mat-button-toggle-group
       [value]="searchMode()"
       (change)="onModeChange($event.value)"
@@ -9,30 +15,33 @@
       hideSingleSelectionIndicator
     >
       <mat-button-toggle value="exact">Exact</mat-button-toggle>
-      <mat-button-toggle value="contains">Contains</mat-button-toggle>
+      <mat-button-toggle value="contains">Partial</mat-button-toggle>
     </mat-button-toggle-group>
-
-    <mat-form-field appearance="outline" style="flex: 1; min-width: 200px;">
-      <mat-label>Search by name</mat-label>
-      <input matInput [formControl]="searchControl" [placeholder]="searchMode() === 'exact' ? 'e.g. House Algood' : 'e.g. rose'" />
-      <mat-icon matSuffix>search</mat-icon>
-    </mat-form-field>
   </div>
 
   @if (loading()) {
     <p>Loading...</p>
   } @else if (error()) {
-    <p style="color: red;">{{ error() }}</p>
+    <p class="text-red-600">{{ error() }}</p>
   } @else if (houses().length === 0) {
     @if (searchMode() === 'exact' && name()) {
-      <p>No houses found for an exact match. Try switching to <strong>Contains</strong> mode for partial matches.</p>
+      <div class="flex flex-col items-center gap-2 py-12 text-center">
+        <p class="text-xl font-semibold">No houses found for an exact match.</p>
+        <p class="text-gray-500">
+          <button
+            class="underline font-medium cursor-pointer bg-transparent border-none p-0 text-inherit"
+            (click)="onModeChange('contains')"
+          >Try switching to Partial</button>
+          mode for partial matches.
+        </p>
+      </div>
     } @else {
-      <p>No houses found.</p>
+      <p class="text-center py-12 text-gray-500">No houses found.</p>
     }
   } @else {
 
     <!-- Mobile: card list -->
-    <div class="mobile-list">
+    <div class="flex flex-col gap-3 md:hidden">
       @for (house of houses(); track house.url) {
         <mat-card>
           <mat-card-header>
@@ -54,8 +63,8 @@
     </div>
 
     <!-- Desktop: Material table -->
-    <div class="desktop-table">
-      <mat-table [dataSource]="houses()" style="width: 100%;">
+    <div class="hidden md:block">
+      <mat-table [dataSource]="houses()" class="w-full">
 
         <ng-container matColumnDef="name">
           <mat-header-cell *matHeaderCellDef>Name</mat-header-cell>
