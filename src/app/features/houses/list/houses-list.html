@@ -1,0 +1,77 @@
+<div style="padding: 16px;">
+  <h1>Houses of Westeros</h1>
+
+  @if (loading()) {
+    <p>Loading...</p>
+  } @else if (error()) {
+    <p style="color: red;">{{ error() }}</p>
+  } @else if (houses().length === 0) {
+    <p>No houses found.</p>
+  } @else {
+
+    <!-- Mobile: card list -->
+    <div class="mobile-list">
+      @for (house of houses(); track house.url) {
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title>{{ house.name }}</mat-card-title>
+            @if (house.region) {
+              <mat-card-subtitle>{{ house.region }}</mat-card-subtitle>
+            }
+          </mat-card-header>
+          <mat-card-content>
+            @if (house.words) {
+              <p><em>{{ house.words }}</em></p>
+            }
+            @if (house.seats[0]) {
+              <p>{{ house.seats[0] }}</p>
+            }
+          </mat-card-content>
+        </mat-card>
+      }
+    </div>
+
+    <!-- Desktop: Material table -->
+    <div class="desktop-table">
+      <mat-table [dataSource]="houses()" style="width: 100%;">
+
+        <ng-container matColumnDef="name">
+          <mat-header-cell *matHeaderCellDef>Name</mat-header-cell>
+          <mat-cell *matCellDef="let house">{{ house.name }}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="region">
+          <mat-header-cell *matHeaderCellDef>Region</mat-header-cell>
+          <mat-cell *matCellDef="let house">{{ house.region || '—' }}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="words">
+          <mat-header-cell *matHeaderCellDef>Words</mat-header-cell>
+          <mat-cell *matCellDef="let house">{{ house.words || '—' }}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="seats">
+          <mat-header-cell *matHeaderCellDef>Seat</mat-header-cell>
+          <mat-cell *matCellDef="let house">{{ house.seats[0] || '—' }}</mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns" />
+        <mat-row *matRowDef="let row; columns: displayedColumns;" />
+
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell" [attr.colspan]="displayedColumns.length">No houses found.</td>
+        </tr>
+
+      </mat-table>
+    </div>
+
+    <mat-paginator
+      [length]="pagination().totalCount"
+      [pageSize]="pagination().pageSize"
+      [pageIndex]="pagination().currentPage - 1"
+      [pageSizeOptions]="[10, 25, 50]"
+      (page)="onPageChange($event)"
+      aria-label="Select page"
+    />
+  }
+</div>
