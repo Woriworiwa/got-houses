@@ -108,7 +108,6 @@ export const HousesStore = signalStore(
 
     const loadAllHouses = rxMethod<void>(
       pipe(
-        tap(() => patchState(store, { loading: true, error: null })),
         switchMap(() =>
           api.getAllHouses().pipe(
             tap((houses) =>

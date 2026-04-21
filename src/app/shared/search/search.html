@@ -1,6 +1,7 @@
 <div class="w-full max-w-2xl relative">
   <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline pointer-events-none z-10" aria-hidden="true">search</span>
   <input
+    #searchInput
     [formControl]="searchControl"
     [placeholder]="placeholder()"
     class="w-full bg-surface-container-lowest border-b-2 border-outline-variant focus:border-primary-container px-12 py-5 font-inter text-body-lg text-on-surface transition-all outline-none"
@@ -15,6 +16,12 @@
     (focus)="onFocus()"
     (blur)="onBlur()"
   />
+  @if (!isFocused()) {
+    <kbd
+      class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none hidden sm:flex items-center gap-0.5 font-inter text-label-sm text-on-surface-variant border border-outline-variant rounded px-1.5 py-0.5"
+      aria-hidden="true"
+    >Ctrl K</kbd>
+  }
 
   @if (showDropdown()) {
     <ul
