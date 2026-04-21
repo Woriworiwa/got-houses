@@ -4,18 +4,22 @@
   <div class="flex flex-wrap items-start gap-4 mb-4">
     <mat-form-field appearance="outline" class="flex-1 min-w-[200px]">
       <mat-label>Search by name</mat-label>
-      <input matInput [formControl]="searchControl" [placeholder]="searchMode() === 'exact' ? 'e.g. House Algood' : 'e.g. rose'" />
+      <input
+        matInput
+        [formControl]="searchControl"
+        [placeholder]="searchMode() === 'exact' ? 'e.g. House Algood' : 'e.g. rose'"
+      />
       <mat-icon matSuffix>search</mat-icon>
     </mat-form-field>
 
     <mat-button-toggle-group
       [value]="searchMode()"
-      (change)="onModeChange($event.value)"
+      (change)="onSearchModeChange($event.value)"
       aria-label="Search mode"
       hideSingleSelectionIndicator
     >
       <mat-button-toggle value="exact">Exact</mat-button-toggle>
-      <mat-button-toggle value="contains">Partial</mat-button-toggle>
+      <mat-button-toggle value="partial">Partial</mat-button-toggle>
     </mat-button-toggle-group>
   </div>
 
@@ -30,8 +34,10 @@
         <p class="text-gray-500">
           <button
             class="underline font-medium cursor-pointer bg-transparent border-none p-0 text-inherit"
-            (click)="onModeChange('contains')"
-          >Try switching to Partial</button>
+            (click)="onSearchModeChange('partial')"
+          >
+            Try switching to Partial
+          </button>
           mode for partial matches.
         </p>
       </div>
@@ -39,7 +45,6 @@
       <p class="text-center py-12 text-gray-500">No houses found.</p>
     }
   } @else {
-
     <!-- Mobile: card list -->
     <div class="flex flex-col gap-3 md:hidden">
       @for (house of houses(); track house.url) {
@@ -52,7 +57,9 @@
           </mat-card-header>
           <mat-card-content>
             @if (house.words) {
-              <p><em>{{ house.words }}</em></p>
+              <p>
+                <em>{{ house.words }}</em>
+              </p>
             }
             @if (house.seats[0]) {
               <p>{{ house.seats[0] }}</p>
@@ -65,7 +72,6 @@
     <!-- Desktop: Material table -->
     <div class="hidden md:block">
       <mat-table [dataSource]="houses()" class="w-full">
-
         <ng-container matColumnDef="name">
           <mat-header-cell *matHeaderCellDef>Name</mat-header-cell>
           <mat-cell *matCellDef="let house">{{ house.name }}</mat-cell>
@@ -87,12 +93,11 @@
         </ng-container>
 
         <mat-header-row *matHeaderRowDef="displayedColumns" />
-        <mat-row *matRowDef="let row; columns: displayedColumns;" />
+        <mat-row *matRowDef="let row; columns: displayedColumns" />
 
         <tr class="mat-row" *matNoDataRow>
           <td class="mat-cell" [attr.colspan]="displayedColumns.length">No houses found.</td>
         </tr>
-
       </mat-table>
     </div>
 

@@ -5,7 +5,7 @@ import { catchError, map, switchMap, withLatestFrom } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 import { IceAndFireApiService } from '../../core/services/ice-and-fire-api.service';
 import * as HousesActions from './houses.actions';
-import { selectAllHousesLoaded } from './houses.selectors';
+import { selectAllHousesLoaded, selectName } from './houses.selectors';
 
 @Injectable()
 export class HousesEffects {
@@ -18,11 +18,13 @@ export class HousesEffects {
       ofType(HousesActions.loadHouses),
       switchMap(({ page, pageSize, name }) =>
         this.api.getHouses(page, pageSize, name).pipe(
-          map(({ houses, pagination }) =>
-            HousesActions.loadHousesSuccess({ houses, pagination }),
-          ),
-          catchError(err =>
-            of(HousesActions.loadHousesFailure({ error: (err as Error).message ?? 'Failed to load houses' })),
+          map(({ houses, pagination }) => HousesActions.loadHousesSuccess({ houses, pagination })),
+          catchError((err) =>
+            of(
+              HousesActions.loadHousesFailure({
+                error: (err as Error).message ?? 'Failed to load houses',
+              }),
+            ),
           ),
         ),
       ),
@@ -34,9 +36,13 @@ export class HousesEffects {
       ofType(HousesActions.loadAllHouses),
       switchMap(() =>
         this.api.getAllHouses().pipe(
-          map(houses => HousesActions.loadAllHousesSuccess({ houses })),
-          catchError(err =>
-            of(HousesActions.loadAllHousesFailure({ error: (err as Error).message ?? 'Failed to load all houses' })),
+          map((houses) => HousesActions.loadAllHousesSuccess({ houses })),
+          catchError((err) =>
+            of(
+              HousesActions.loadAllHousesFailure({
+                error: (err as Error).message ?? 'Failed to load all houses',
+              }),
+            ),
           ),
         ),
       ),
@@ -46,12 +52,12 @@ export class HousesEffects {
   setSearchMode$ = createEffect(() =>
     this.actions$.pipe(
       ofType(HousesActions.setSearchMode),
-      withLatestFrom(this.store.select(selectAllHousesLoaded)),
-      switchMap(([{ mode }, allLoaded]) => {
-        if (mode === 'contains') {
+      withLatestFrom(this.store.select(selectAllHousesLoaded), this.store.select(selectName)),
+      switchMap(([{ mode }, allLoaded, name]) => {
+        if (mode === 'partial') {
           return allLoaded ? EMPTY : of(HousesActions.loadAllHouses());
         }
-        return of(HousesActions.loadHouses({ page: 1, pageSize: 10 }));
+        return of(HousesActions.loadHouses({ page: 1, pageSize: 10, name }));
       }),
     ),
   );
