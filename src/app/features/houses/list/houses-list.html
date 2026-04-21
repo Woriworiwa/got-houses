@@ -1,12 +1,34 @@
 <div style="padding: 16px;">
   <h1>Houses of Westeros</h1>
 
+  <div style="display: flex; gap: 16px; flex-wrap: wrap; align-items: flex-start; margin-bottom: 16px;">
+    <mat-button-toggle-group
+      [value]="searchMode()"
+      (change)="onModeChange($event.value)"
+      aria-label="Search mode"
+      hideSingleSelectionIndicator
+    >
+      <mat-button-toggle value="exact">Exact</mat-button-toggle>
+      <mat-button-toggle value="contains">Contains</mat-button-toggle>
+    </mat-button-toggle-group>
+
+    <mat-form-field appearance="outline" style="flex: 1; min-width: 200px;">
+      <mat-label>Search by name</mat-label>
+      <input matInput [formControl]="searchControl" [placeholder]="searchMode() === 'exact' ? 'e.g. House Algood' : 'e.g. rose'" />
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+  </div>
+
   @if (loading()) {
     <p>Loading...</p>
   } @else if (error()) {
     <p style="color: red;">{{ error() }}</p>
   } @else if (houses().length === 0) {
-    <p>No houses found.</p>
+    @if (searchMode() === 'exact' && name()) {
+      <p>No houses found for an exact match. Try switching to <strong>Contains</strong> mode for partial matches.</p>
+    } @else {
+      <p>No houses found.</p>
+    }
   } @else {
 
     <!-- Mobile: card list -->
@@ -66,7 +88,7 @@
     </div>
 
     <mat-paginator
-      [length]="pagination().totalCount"
+      [length]="totalCount()"
       [pageSize]="pagination().pageSize"
       [pageIndex]="pagination().currentPage - 1"
       [pageSizeOptions]="[10, 25, 50]"
