@@ -1,55 +1,96 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatBadgeModule } from '@angular/material/badge';
 import { FavoritesStore } from './core/stores/favorites.store';
 
 @Component({
   selector: 'app-root',
-  imports: [
-    RouterOutlet,
-    RouterLink,
-    RouterLinkActive,
-    MatToolbarModule,
-    MatButtonModule,
-    MatIconModule,
-    MatBadgeModule,
-  ],
-  template: `
-    <mat-toolbar color="primary" role="navigation" aria-label="Main navigation">
-      <a
-        mat-button
-        routerLink="/houses"
-        routerLinkActive="mat-accent"
-        [routerLinkActiveOptions]="{ exact: false }"
-        aria-label="Houses of Westeros"
-      >
-        <mat-icon>castle</mat-icon>
-        Houses
-      </a>
-      <span class="flex-1"></span>
-      <a
-        mat-button
-        routerLink="/favorites"
-        routerLinkActive="mat-accent"
-        [routerLinkActiveOptions]="{ exact: false }"
-        aria-label="My Favorites"
-      >
-        <mat-icon
-          [matBadge]="favoriteCount()"
-          [matBadgeHidden]="favoriteCount() === 0"
-          matBadgeColor="warn"
-          matBadgeSize="small"
-          aria-hidden="true"
-        >favorite</mat-icon>
-        Favorites
-      </a>
-    </mat-toolbar>
-    <router-outlet />
-  `,
+  imports: [RouterOutlet, RouterLink, RouterLinkActive],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  template: `
+    <header class="bg-surface sticky top-0 z-50 border-b border-outline-variant shadow-sm" role="banner">
+      <div class="max-w-7xl mx-auto px-6 md:px-12 py-4 flex items-center justify-between">
+        <a
+          routerLink="/houses"
+          class="text-2xl font-newsreader font-bold text-on-surface hover:text-primary transition-colors"
+          aria-label="Westeros Catalog home"
+        >Westeros Catalog</a>
+
+        <nav class="hidden md:flex items-center gap-8 text-on-surface-variant" aria-label="Main navigation">
+          <a
+            routerLink="/houses"
+            routerLinkActive="!text-primary border-b-2 border-primary"
+            [routerLinkActiveOptions]="{ exact: false }"
+            class="font-inter font-semibold pb-1 transition-colors hover:text-on-surface"
+          >Houses</a>
+          <a
+            routerLink="/favorites"
+            routerLinkActive="!text-primary border-b-2 border-primary"
+            [routerLinkActiveOptions]="{ exact: false }"
+            class="font-inter pb-1 transition-colors hover:text-on-surface inline-flex items-center gap-2"
+          >
+            Favorites
+            @if (favoriteCount() > 0) {
+              <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-primary text-on-primary text-[10px] font-bold leading-none" aria-label="{{ favoriteCount() }} saved">
+                {{ favoriteCount() > 99 ? '99+' : favoriteCount() }}
+              </span>
+            }
+          </a>
+          <span class="font-inter opacity-40 cursor-not-allowed" aria-disabled="true">About</span>
+          <div class="flex items-center gap-1 ml-2">
+            <button class="p-2 rounded-md hover:bg-surface-container transition-colors" aria-label="Search" type="button">
+              <span class="material-symbols-outlined" aria-hidden="true">search</span>
+            </button>
+            <button class="p-2 rounded-md hover:bg-surface-container transition-colors" aria-label="Account" type="button">
+              <span class="material-symbols-outlined" aria-hidden="true">account_circle</span>
+            </button>
+          </div>
+        </nav>
+
+        <button class="md:hidden p-2 rounded-md hover:bg-surface-container transition-colors" aria-label="Open navigation menu" type="button">
+          <span class="material-symbols-outlined" aria-hidden="true">menu</span>
+        </button>
+      </div>
+    </header>
+
+    <div class="pb-24 md:pb-0">
+      <router-outlet />
+    </div>
+
+    <nav
+      class="md:hidden fixed bottom-0 inset-x-0 z-50 bg-surface border-t border-outline-variant shadow-[0_-4px_12px_rgba(0,0,0,0.04)] rounded-t-lg"
+      aria-label="Mobile navigation"
+    >
+      <div class="flex justify-around items-center px-4 pt-2 pb-4">
+        <a
+          routerLink="/houses"
+          routerLinkActive="!text-on-surface bg-primary-container/20"
+          [routerLinkActiveOptions]="{ exact: false }"
+          class="flex flex-col items-center px-4 py-1 rounded-xl transition-colors text-on-surface-variant"
+          aria-label="Houses"
+        >
+          <span class="material-symbols-outlined" aria-hidden="true">castle</span>
+          <span class="text-[11px] font-newsreader font-medium tracking-wide uppercase mt-1">Houses</span>
+        </a>
+        <a
+          routerLink="/favorites"
+          routerLinkActive="!text-on-surface bg-primary-container/20"
+          [routerLinkActiveOptions]="{ exact: false }"
+          class="flex flex-col items-center px-4 py-1 rounded-xl transition-colors text-on-surface-variant"
+          aria-label="Favorites"
+        >
+          <span class="material-symbols-outlined" aria-hidden="true">favorite</span>
+          <span class="text-[11px] font-newsreader font-medium tracking-wide uppercase mt-1">Favorites</span>
+        </a>
+        <span
+          class="flex flex-col items-center px-4 py-1 rounded-xl text-on-surface-variant opacity-40 cursor-not-allowed"
+          aria-disabled="true"
+        >
+          <span class="material-symbols-outlined" aria-hidden="true">info</span>
+          <span class="text-[11px] font-newsreader font-medium tracking-wide uppercase mt-1">About</span>
+        </span>
+      </div>
+    </nav>
+  `,
 })
 export class App {
   private readonly favoritesStore = inject(FavoritesStore);

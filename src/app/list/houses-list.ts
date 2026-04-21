@@ -1,20 +1,13 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   DestroyRef,
   inject,
   OnInit,
 } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
-import { MatTableModule } from '@angular/material/table';
-import { MatCardModule } from '@angular/material/card';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
-import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { houseIdFromUrl } from '../core/models/house.model';
@@ -25,18 +18,7 @@ import { FavoritesStore } from '../core/stores/favorites.store';
   selector: 'app-houses-list',
   templateUrl: './houses-list.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    ReactiveFormsModule,
-    RouterLink,
-    MatTableModule,
-    MatPaginatorModule,
-    MatCardModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatIconModule,
-    MatButtonModule,
-    MatButtonToggleModule,
-  ],
+  imports: [ReactiveFormsModule, RouterLink],
 })
 export class HousesListComponent implements OnInit {
   protected readonly store = inject(HousesStore);
@@ -44,7 +26,6 @@ export class HousesListComponent implements OnInit {
   private readonly destroyRef = inject(DestroyRef);
 
   protected readonly houseIdFromUrl = houseIdFromUrl;
-  protected readonly displayedColumns = ['name', 'region', 'words', 'seats', 'favorite'];
   protected readonly searchControl = new FormControl('');
 
   protected readonly houses = this.store.displayedHouses;
@@ -54,6 +35,29 @@ export class HousesListComponent implements OnInit {
   protected readonly totalCount = this.store.displayTotalCount;
   protected readonly name = this.store.name;
   protected readonly searchMode = this.store.searchMode;
+
+  protected readonly totalPages = computed(() =>
+    Math.max(1, Math.ceil(this.totalCount() / this.pagination().pageSize)),
+  );
+
+  protected readonly pageNumbers = computed((): (number | -1)[] => {
+    const total = this.totalPages();
+    const current = this.pagination().currentPage;
+
+    if (total <= 7) {
+      return Array.from({ length: total }, (_, i) => i + 1);
+    }
+
+    const pages: (number | -1)[] = [1];
+    if (current > 3) pages.push(-1);
+    const start = Math.max(2, current - 1);
+    const end = Math.min(total - 1, current + 1);
+    for (let p = start; p <= end; p++) pages.push(p);
+    if (current < total - 2) pages.push(-1);
+    pages.push(total);
+
+    return pages;
+  });
 
   ngOnInit(): void {
     this.store.loadHouses({ page: 1, pageSize: 10 });
@@ -76,22 +80,18 @@ export class HousesListComponent implements OnInit {
 
   protected onSearchModeChange(mode: SearchMode): void {
     this.store.setSearchMode(mode);
-
     const term = this.searchControl.value ?? '';
     if (term) {
       this.store.setSearchName(term);
     }
   }
 
-  protected onPageChange(event: PageEvent): void {
+  protected onPageChange(page: number): void {
+    const { pageSize } = this.pagination();
     if (this.searchMode() === 'partial') {
-      this.store.setContainsPage(event.pageIndex + 1, event.pageSize);
+      this.store.setContainsPage(page, pageSize);
     } else {
-      this.store.loadHouses({
-        page: event.pageIndex + 1,
-        pageSize: event.pageSize,
-        name: this.name(),
-      });
+      this.store.loadHouses({ page, pageSize, name: this.name() });
     }
   }
 }

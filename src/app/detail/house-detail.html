@@ -1,88 +1,98 @@
-<div class="p-4 max-w-3xl mx-auto">
-  <a mat-button routerLink="/houses" class="mb-4 inline-flex items-center gap-1">
-    <mat-icon>arrow_back</mat-icon> Back to Houses
+<div class="max-w-3xl mx-auto px-6 md:px-12 py-12 md:py-20">
+
+  <a
+    routerLink="/houses"
+    class="inline-flex items-center gap-2 font-inter text-body-md text-on-surface-variant hover:text-primary transition-colors mb-10"
+  >
+    <span class="material-symbols-outlined text-[20px]" aria-hidden="true">arrow_back</span>
+    Back to Houses
   </a>
 
   @if (loading()) {
-    <div class="flex justify-center py-16">
-      <mat-spinner />
+    <div class="flex justify-center py-20" role="status" aria-label="Loading house details">
+      <div class="w-12 h-12 border-4 border-primary-container border-t-primary rounded-full animate-spin"></div>
     </div>
+
   } @else if (error()) {
-    <p class="text-red-600 text-center py-12">{{ error() }}</p>
+    <p class="text-error text-center py-12 font-inter text-body-md" role="alert">{{ error() }}</p>
+
   } @else if (house(); as h) {
-    <mat-card>
-      <mat-card-header>
-        <mat-card-title class="text-2xl">{{ h.name }}</mat-card-title>
-        @if (h.region) {
-          <mat-card-subtitle>{{ h.region }}</mat-card-subtitle>
-        }
-        <button
-          mat-icon-button
-          class="ml-auto"
-          [attr.aria-label]="isFavorite() ? 'Remove from favorites' : 'Add to favorites'"
-          (click)="toggleFavorite()"
-        >
-          <mat-icon>{{ isFavorite() ? 'favorite' : 'favorite_border' }}</mat-icon>
-        </button>
-      </mat-card-header>
+    <article class="bg-surface-container-lowest rounded-xl border border-outline-variant shadow-[0_12px_12px_rgba(30,35,43,0.04)] p-8 md:p-12">
 
-      <mat-card-content class="mt-4">
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-
-          @if (h.words) {
-            <div class="sm:col-span-2">
-              <p class="text-sm text-gray-500">Words</p>
-              <p class="italic">{{ h.words }}</p>
-            </div>
-          }
-
-          <div>
-            <p class="text-sm text-gray-500">Founded</p>
-            <p>{{ h.founded || '—' }}</p>
+      <header class="mb-8">
+        <div class="flex items-start justify-between gap-4">
+          <div class="min-w-0">
+            @if (h.region) {
+              <span class="block font-inter text-label-sm text-primary-container uppercase tracking-widest mb-2">{{ h.region }}</span>
+            }
+            <h1 class="font-newsreader text-display-lg text-on-surface break-words">{{ h.name }}</h1>
           </div>
-
-          <div>
-            <p class="text-sm text-gray-500">Founder</p>
-            <p>{{ h.founder || '—' }}</p>
-          </div>
-
-          <div>
-            <p class="text-sm text-gray-500">Died Out</p>
-            <p>{{ h.diedOut || '—' }}</p>
-          </div>
-
-          <div>
-            <p class="text-sm text-gray-500">Coat of Arms</p>
-            <p>{{ h.coatOfArms || '—' }}</p>
-          </div>
-
-          <div>
-            <p class="text-sm text-gray-500">Seats</p>
-            <p>{{ h.seats.length ? h.seats.join(', ') : '(none)' }}</p>
-          </div>
-
-          <div>
-            <p class="text-sm text-gray-500">Titles</p>
-            <p>{{ h.titles.length ? h.titles.join(', ') : '(none)' }}</p>
-          </div>
-
-          <div>
-            <p class="text-sm text-gray-500">Ancestral Weapons</p>
-            <p>{{ h.ancestralWeapons.length ? h.ancestralWeapons.join(', ') : '(none)' }}</p>
-          </div>
-
-          <div>
-            <p class="text-sm text-gray-500">Sworn Members</p>
-            <p>{{ h.swornMembers.length }}</p>
-          </div>
-
-          <div>
-            <p class="text-sm text-gray-500">Cadet Branches</p>
-            <p>{{ h.cadetBranches.length }}</p>
-          </div>
-
+          <button
+            type="button"
+            class="flex-shrink-0 p-2 rounded-md hover:bg-surface-container transition-colors"
+            [class.text-primary]="isFavorite()"
+            [class.text-on-surface-variant]="!isFavorite()"
+            [attr.aria-label]="isFavorite() ? 'Remove from favorites' : 'Add to favorites'"
+            (click)="toggleFavorite()"
+          >
+            <span
+              class="material-symbols-outlined"
+              style="font-size: 32px"
+              [class.icon-filled]="isFavorite()"
+              aria-hidden="true"
+            >favorite</span>
+          </button>
         </div>
-      </mat-card-content>
-    </mat-card>
+
+        <div class="w-16 h-1 bg-primary-container mt-6" aria-hidden="true"></div>
+
+        @if (h.words) {
+          <p class="font-newsreader text-headline-md italic text-on-surface-variant mt-6">"{{ h.words }}"</p>
+        }
+      </header>
+
+      <hr class="border-outline-variant mb-8" aria-hidden="true" />
+
+      <dl class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <div>
+          <dt class="font-inter text-label-sm text-on-surface-variant uppercase tracking-widest mb-1">Founded</dt>
+          <dd class="font-inter text-body-md text-on-surface">{{ h.founded || '—' }}</dd>
+        </div>
+        <div>
+          <dt class="font-inter text-label-sm text-on-surface-variant uppercase tracking-widest mb-1">Founder</dt>
+          <dd class="font-inter text-body-md text-on-surface">{{ h.founder || '—' }}</dd>
+        </div>
+        <div>
+          <dt class="font-inter text-label-sm text-on-surface-variant uppercase tracking-widest mb-1">Died Out</dt>
+          <dd class="font-inter text-body-md text-on-surface">{{ h.diedOut || '—' }}</dd>
+        </div>
+        <div>
+          <dt class="font-inter text-label-sm text-on-surface-variant uppercase tracking-widest mb-1">Coat of Arms</dt>
+          <dd class="font-inter text-body-md text-on-surface">{{ h.coatOfArms || '—' }}</dd>
+        </div>
+        <div>
+          <dt class="font-inter text-label-sm text-on-surface-variant uppercase tracking-widest mb-1">Seats</dt>
+          <dd class="font-inter text-body-md text-on-surface">{{ h.seats.length ? h.seats.join(', ') : '—' }}</dd>
+        </div>
+        <div>
+          <dt class="font-inter text-label-sm text-on-surface-variant uppercase tracking-widest mb-1">Titles</dt>
+          <dd class="font-inter text-body-md text-on-surface">{{ h.titles.length ? h.titles.join(', ') : '—' }}</dd>
+        </div>
+        <div>
+          <dt class="font-inter text-label-sm text-on-surface-variant uppercase tracking-widest mb-1">Ancestral Weapons</dt>
+          <dd class="font-inter text-body-md text-on-surface">{{ h.ancestralWeapons.length ? h.ancestralWeapons.join(', ') : '—' }}</dd>
+        </div>
+        <div>
+          <dt class="font-inter text-label-sm text-on-surface-variant uppercase tracking-widest mb-1">Sworn Members</dt>
+          <dd class="font-inter text-body-md text-on-surface">{{ h.swornMembers.length }}</dd>
+        </div>
+        <div>
+          <dt class="font-inter text-label-sm text-on-surface-variant uppercase tracking-widest mb-1">Cadet Branches</dt>
+          <dd class="font-inter text-body-md text-on-surface">{{ h.cadetBranches.length }}</dd>
+        </div>
+      </dl>
+
+    </article>
   }
+
 </div>

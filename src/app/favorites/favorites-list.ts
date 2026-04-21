@@ -1,9 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, effect, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { MatCardModule } from '@angular/material/card';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { House, houseIdFromUrl } from '../core/models/house.model';
 import { HousesStore } from '../core/stores/houses.store';
 import { FavoritesStore } from '../core/stores/favorites.store';
@@ -12,7 +8,7 @@ import { FavoritesStore } from '../core/stores/favorites.store';
   selector: 'app-favorites-list',
   templateUrl: './favorites-list.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterLink, MatCardModule, MatButtonModule, MatIconModule, MatProgressSpinnerModule],
+  imports: [RouterLink],
 })
 export class FavoritesListComponent {
   protected readonly favoritesStore = inject(FavoritesStore);

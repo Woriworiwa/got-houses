@@ -1,9 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, effect, inject, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { MatCardModule } from '@angular/material/card';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { HousesStore } from '../core/stores/houses.store';
 import { FavoritesStore } from '../core/stores/favorites.store';
 import { houseIdFromUrl } from '../core/models/house.model';
@@ -12,7 +8,7 @@ import { houseIdFromUrl } from '../core/models/house.model';
   selector: 'app-house-detail',
   templateUrl: './house-detail.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterLink, MatCardModule, MatButtonModule, MatIconModule, MatProgressSpinnerModule],
+  imports: [RouterLink],
 })
 export class HouseDetailComponent {
   protected readonly store = inject(HousesStore);
