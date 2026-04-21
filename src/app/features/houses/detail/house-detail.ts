@@ -1,16 +1,10 @@
 import { ChangeDetectionStrategy, Component, effect, inject, input } from '@angular/core';
-import { Store } from '@ngrx/store';
 import { RouterLink } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { loadHouseDetail } from '../../../store/houses/houses.actions';
-import {
-  selectSelectedHouse,
-  selectSelectedHouseError,
-  selectSelectedHouseLoading,
-} from '../../../store/houses/houses.selectors';
+import { HousesStore } from '../houses.store';
 
 @Component({
   selector: 'app-house-detail',
@@ -19,17 +13,17 @@ import {
   imports: [RouterLink, MatCardModule, MatButtonModule, MatIconModule, MatProgressSpinnerModule],
 })
 export class HouseDetailComponent {
-  private readonly store = inject(Store);
+  protected readonly store = inject(HousesStore);
 
   readonly id = input.required<string>();
 
-  protected readonly house = this.store.selectSignal(selectSelectedHouse);
-  protected readonly loading = this.store.selectSignal(selectSelectedHouseLoading);
-  protected readonly error = this.store.selectSignal(selectSelectedHouseError);
+  protected readonly house = this.store.selectedHouse;
+  protected readonly loading = this.store.selectedHouseLoading;
+  protected readonly error = this.store.selectedHouseError;
 
   constructor() {
     effect(() => {
-      this.store.dispatch(loadHouseDetail({ id: Number(this.id()) }));
+      this.store.loadHouseDetail(Number(this.id()));
     });
   }
 }
