@@ -13,6 +13,9 @@ export interface HousesState {
   pagination: PaginationMeta;
   name: string;
   searchMode: SearchMode;
+  selectedHouse: House | null;
+  selectedHouseLoading: boolean;
+  selectedHouseError: string | null;
 }
 
 const initialState: HousesState = {
@@ -24,6 +27,9 @@ const initialState: HousesState = {
   pagination: { currentPage: 1, pageSize: 10, totalCount: 0 },
   name: '',
   searchMode: 'exact',
+  selectedHouse: null,
+  selectedHouseLoading: false,
+  selectedHouseError: null,
 };
 
 export const housesReducer = createReducer(
@@ -74,5 +80,20 @@ export const housesReducer = createReducer(
   on(HousesActions.setContainsPage, (state, { page, pageSize }) => ({
     ...state,
     pagination: { ...state.pagination, currentPage: page, pageSize },
+  })),
+  on(HousesActions.loadHouseDetail, (state) => ({
+    ...state,
+    selectedHouseLoading: true,
+    selectedHouseError: null,
+  })),
+  on(HousesActions.loadHouseDetailSuccess, (state, { house }) => ({
+    ...state,
+    selectedHouseLoading: false,
+    selectedHouse: house,
+  })),
+  on(HousesActions.loadHouseDetailFailure, (state, { error }) => ({
+    ...state,
+    selectedHouseLoading: false,
+    selectedHouseError: error,
   })),
 );

@@ -35,3 +35,13 @@ export const selectDisplayTotalCount = createSelector(
   (state, filtered) =>
     state.searchMode === 'partial' ? filtered.length : state.pagination.totalCount,
 );
+
+export const selectSelectedHouse = createSelector(selectHousesFeature, (s) => s.selectedHouse);
+export const selectSelectedHouseLoading = createSelector(
+  selectHousesFeature,
+  (s) => s.selectedHouseLoading,
+);
+export const selectSelectedHouseError = createSelector(
+  selectHousesFeature,
+  (s) => s.selectedHouseError,
+);

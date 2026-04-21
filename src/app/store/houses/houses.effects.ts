@@ -61,4 +61,22 @@ export class HousesEffects {
       }),
     ),
   );
+
+  loadHouseDetail$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(HousesActions.loadHouseDetail),
+      switchMap(({ id }) =>
+        this.api.getHouse(id).pipe(
+          map((house) => HousesActions.loadHouseDetailSuccess({ house })),
+          catchError((err) =>
+            of(
+              HousesActions.loadHouseDetailFailure({
+                error: (err as Error).message ?? 'Failed to load house',
+              }),
+            ),
+          ),
+        ),
+      ),
+    ),
+  );
 }

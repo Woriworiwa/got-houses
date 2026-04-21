@@ -7,6 +7,9 @@ import {
   selectName,
   selectPagination,
   selectSearchMode,
+  selectSelectedHouse,
+  selectSelectedHouseError,
+  selectSelectedHouseLoading,
 } from './houses.selectors';
 import { HousesState } from './houses.reducer';
 import { makeHouse } from './houses.test-fixtures';
@@ -20,6 +23,9 @@ const baseState: HousesState = {
   pagination: { currentPage: 1, pageSize: 10, totalCount: 0 },
   name: '',
   searchMode: 'exact',
+  selectedHouse: null,
+  selectedHouseLoading: false,
+  selectedHouseError: null,
 };
 
 // Selectors use createFeatureSelector which requires a root state shape.
@@ -52,6 +58,23 @@ describe('simple selectors', () => {
 
   it('selectAllHousesLoaded', () => {
     expect(project(selectAllHousesLoaded, { ...baseState, allHousesLoaded: true })).toBe(true);
+  });
+
+  it('selectSelectedHouse', () => {
+    const house = makeHouse('House Stark');
+    expect(project(selectSelectedHouse, { ...baseState, selectedHouse: house })).toBe(house);
+  });
+
+  it('selectSelectedHouse returns null when no house loaded', () => {
+    expect(project(selectSelectedHouse, baseState)).toBeNull();
+  });
+
+  it('selectSelectedHouseLoading', () => {
+    expect(project(selectSelectedHouseLoading, { ...baseState, selectedHouseLoading: true })).toBe(true);
+  });
+
+  it('selectSelectedHouseError', () => {
+    expect(project(selectSelectedHouseError, { ...baseState, selectedHouseError: 'Not found' })).toBe('Not found');
   });
 });
 

@@ -42,3 +42,13 @@ export const setContainsPage = createAction(
   '[Houses] Set Contains Page',
   props<{ page: number; pageSize: number }>(),
 );
+
+export const loadHouseDetail = createAction('[Houses] Load House Detail', props<{ id: number }>());
+export const loadHouseDetailSuccess = createAction(
+  '[Houses] Load House Detail Success',
+  props<{ house: House }>(),
+);
+export const loadHouseDetailFailure = createAction(
+  '[Houses] Load House Detail Failure',
+  props<{ error: string }>(),
+);

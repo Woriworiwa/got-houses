@@ -7,6 +7,7 @@ import {
 } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { Store } from '@ngrx/store';
+import { RouterLink } from '@angular/router';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
 import { MatCardModule } from '@angular/material/card';
@@ -32,6 +33,7 @@ import {
   selectSearchMode,
 } from '../../../store/houses/houses.selectors';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { houseIdFromUrl } from '../../../core/models/house.model';
 
 @Component({
   selector: 'app-houses-list',
@@ -39,6 +41,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     ReactiveFormsModule,
+    RouterLink,
     MatTableModule,
     MatPaginatorModule,
     MatCardModule,
@@ -52,6 +55,7 @@ export class HousesListComponent implements OnInit {
   private readonly store = inject(Store);
   private destroyRef = inject(DestroyRef);
 
+  protected readonly houseIdFromUrl = houseIdFromUrl;
   protected readonly displayedColumns = ['name', 'region', 'words', 'seats'];
   protected readonly searchControl = new FormControl('');
 

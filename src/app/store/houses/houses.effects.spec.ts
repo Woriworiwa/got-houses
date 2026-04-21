@@ -18,6 +18,7 @@ const pagination: PaginationMeta = { currentPage: 1, pageSize: 10, totalCount: 1
 const mockApi = {
   getHouses: vi.fn(),
   getAllHouses: vi.fn(),
+  getHouse: vi.fn(),
 };
 
 describe('HousesEffects', () => {
@@ -96,6 +97,32 @@ describe('HousesEffects', () => {
       const action = await firstValueFrom(effects.loadAllHouses$);
 
       expect(action).toEqual(HousesActions.loadAllHousesFailure({ error: 'Timeout' }));
+    });
+  });
+
+  // ─── loadHouseDetail$ ─────────────────────────────────────────────────────
+
+  describe('loadHouseDetail$', () => {
+    it('dispatches loadHouseDetailSuccess on API success', async () => {
+      const house = makeHouse('House Stark');
+      mockApi.getHouse.mockReturnValue(of(house));
+
+      actions$ = of(HousesActions.loadHouseDetail({ id: 42 }));
+
+      const action = await firstValueFrom(effects.loadHouseDetail$);
+
+      expect(action).toEqual(HousesActions.loadHouseDetailSuccess({ house }));
+      expect(mockApi.getHouse).toHaveBeenCalledWith(42);
+    });
+
+    it('dispatches loadHouseDetailFailure on API error', async () => {
+      mockApi.getHouse.mockReturnValue(throwError(() => new Error('Not found')));
+
+      actions$ = of(HousesActions.loadHouseDetail({ id: 99 }));
+
+      const action = await firstValueFrom(effects.loadHouseDetail$);
+
+      expect(action).toEqual(HousesActions.loadHouseDetailFailure({ error: 'Not found' }));
     });
   });
 

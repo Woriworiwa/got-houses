@@ -12,6 +12,9 @@ const initialState: HousesState = {
   pagination: { currentPage: 1, pageSize: 10, totalCount: 0 },
   name: '',
   searchMode: 'exact',
+  selectedHouse: null,
+  selectedHouseLoading: false,
+  selectedHouseError: null,
 };
 
 const pagination: PaginationMeta = { currentPage: 2, pageSize: 25, totalCount: 100 };
@@ -115,6 +118,34 @@ describe('housesReducer', () => {
       const state = { ...initialState, pagination: { ...initialState.pagination, currentPage: 5 } };
       const next = housesReducer(state, HousesActions.setSearchName({ name: 'stark' }));
       expect(next.pagination.currentPage).toBe(1);
+    });
+  });
+
+  describe('loadHouseDetail', () => {
+    it('sets selectedHouseLoading to true and clears selectedHouseError', () => {
+      const state = { ...initialState, selectedHouseError: 'previous error' };
+      const next = housesReducer(state, HousesActions.loadHouseDetail({ id: 42 }));
+      expect(next.selectedHouseLoading).toBe(true);
+      expect(next.selectedHouseError).toBeNull();
+    });
+  });
+
+  describe('loadHouseDetailSuccess', () => {
+    it('stores the house and clears selectedHouseLoading', () => {
+      const state = { ...initialState, selectedHouseLoading: true };
+      const house = makeHouse('House Stark');
+      const next = housesReducer(state, HousesActions.loadHouseDetailSuccess({ house }));
+      expect(next.selectedHouseLoading).toBe(false);
+      expect(next.selectedHouse).toBe(house);
+    });
+  });
+
+  describe('loadHouseDetailFailure', () => {
+    it('stores selectedHouseError and clears selectedHouseLoading', () => {
+      const state = { ...initialState, selectedHouseLoading: true };
+      const next = housesReducer(state, HousesActions.loadHouseDetailFailure({ error: 'Not found' }));
+      expect(next.selectedHouseLoading).toBe(false);
+      expect(next.selectedHouseError).toBe('Not found');
     });
   });
 

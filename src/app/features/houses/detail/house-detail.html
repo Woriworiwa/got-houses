@@ -1,0 +1,80 @@
+<div class="p-4 max-w-3xl mx-auto">
+  <a mat-button routerLink="/houses" class="mb-4 inline-flex items-center gap-1">
+    <mat-icon>arrow_back</mat-icon> Back to Houses
+  </a>
+
+  @if (loading()) {
+    <div class="flex justify-center py-16">
+      <mat-spinner />
+    </div>
+  } @else if (error()) {
+    <p class="text-red-600 text-center py-12">{{ error() }}</p>
+  } @else if (house(); as h) {
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title class="text-2xl">{{ h.name }}</mat-card-title>
+        @if (h.region) {
+          <mat-card-subtitle>{{ h.region }}</mat-card-subtitle>
+        }
+      </mat-card-header>
+
+      <mat-card-content class="mt-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+          @if (h.words) {
+            <div class="sm:col-span-2">
+              <p class="text-sm text-gray-500">Words</p>
+              <p class="italic">{{ h.words }}</p>
+            </div>
+          }
+
+          <div>
+            <p class="text-sm text-gray-500">Founded</p>
+            <p>{{ h.founded || '—' }}</p>
+          </div>
+
+          <div>
+            <p class="text-sm text-gray-500">Founder</p>
+            <p>{{ h.founder || '—' }}</p>
+          </div>
+
+          <div>
+            <p class="text-sm text-gray-500">Died Out</p>
+            <p>{{ h.diedOut || '—' }}</p>
+          </div>
+
+          <div>
+            <p class="text-sm text-gray-500">Coat of Arms</p>
+            <p>{{ h.coatOfArms || '—' }}</p>
+          </div>
+
+          <div>
+            <p class="text-sm text-gray-500">Seats</p>
+            <p>{{ h.seats.length ? h.seats.join(', ') : '(none)' }}</p>
+          </div>
+
+          <div>
+            <p class="text-sm text-gray-500">Titles</p>
+            <p>{{ h.titles.length ? h.titles.join(', ') : '(none)' }}</p>
+          </div>
+
+          <div>
+            <p class="text-sm text-gray-500">Ancestral Weapons</p>
+            <p>{{ h.ancestralWeapons.length ? h.ancestralWeapons.join(', ') : '(none)' }}</p>
+          </div>
+
+          <div>
+            <p class="text-sm text-gray-500">Sworn Members</p>
+            <p>{{ h.swornMembers.length }}</p>
+          </div>
+
+          <div>
+            <p class="text-sm text-gray-500">Cadet Branches</p>
+            <p>{{ h.cadetBranches.length }}</p>
+          </div>
+
+        </div>
+      </mat-card-content>
+    </mat-card>
+  }
+</div>

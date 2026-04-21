@@ -48,7 +48,7 @@
     <!-- Mobile: card list -->
     <div class="flex flex-col gap-3 md:hidden">
       @for (house of houses(); track house.url) {
-        <mat-card>
+        <mat-card [routerLink]="[houseIdFromUrl(house.url)]" class="cursor-pointer">
           <mat-card-header>
             <mat-card-title>{{ house.name }}</mat-card-title>
             @if (house.region) {
@@ -93,7 +93,7 @@
         </ng-container>
 
         <mat-header-row *matHeaderRowDef="displayedColumns" />
-        <mat-row *matRowDef="let row; columns: displayedColumns" />
+        <mat-row *matRowDef="let row; columns: displayedColumns" [routerLink]="[houseIdFromUrl(row.url)]" class="cursor-pointer" />
 
         <tr class="mat-row" *matNoDataRow>
           <td class="mat-cell" [attr.colspan]="displayedColumns.length">No houses found.</td>
