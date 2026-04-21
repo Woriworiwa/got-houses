@@ -4,9 +4,9 @@ import { signalStore, withState, withComputed, withMethods, patchState } from '@
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { EMPTY, pipe } from 'rxjs';
 import { switchMap, tap, catchError } from 'rxjs/operators';
-import { House, houseIdFromUrl } from '../../core/models/house.model';
-import { PaginationMeta } from '../../core/models/pagination.model';
-import { IceAndFireApiService } from '../../core/services/ice-and-fire-api.service';
+import { House, houseIdFromUrl } from '../models/house.model';
+import { PaginationMeta } from '../models/pagination.model';
+import { IceAndFireApiService } from '../services/ice-and-fire-api.service';
 
 export type SearchMode = 'exact' | 'partial';
 

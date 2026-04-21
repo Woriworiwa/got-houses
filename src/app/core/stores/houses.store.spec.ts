@@ -4,9 +4,9 @@ import { vi } from 'vitest';
 import { HttpErrorResponse } from '@angular/common/http';
 
 import { HousesStore } from './houses.store';
-import { IceAndFireApiService } from '../../core/services/ice-and-fire-api.service';
-import { House, houseIdFromUrl } from '../../core/models/house.model';
-import { PaginationMeta } from '../../core/models/pagination.model';
+import { IceAndFireApiService } from '../services/ice-and-fire-api.service';
+import { House, houseIdFromUrl } from '../models/house.model';
+import { PaginationMeta } from '../models/pagination.model';
 
 // ── fixtures ──────────────────────────────────────────────────────────────────
 

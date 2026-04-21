@@ -17,9 +17,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { houseIdFromUrl } from '../../../core/models/house.model';
-import { HousesStore, SearchMode } from '../houses.store';
-import { FavoritesStore } from '../../favorites/favorites.store';
+import { houseIdFromUrl } from '../core/models/house.model';
+import { HousesStore, SearchMode } from '../core/stores/houses.store';
+import { FavoritesStore } from '../core/stores/favorites.store';
 
 @Component({
   selector: 'app-houses-list',

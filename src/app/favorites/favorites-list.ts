@@ -4,9 +4,9 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { House, houseIdFromUrl } from '../../core/models/house.model';
-import { HousesStore } from '../houses/houses.store';
-import { FavoritesStore } from './favorites.store';
+import { House, houseIdFromUrl } from '../core/models/house.model';
+import { HousesStore } from '../core/stores/houses.store';
+import { FavoritesStore } from '../core/stores/favorites.store';
 
 @Component({
   selector: 'app-favorites-list',

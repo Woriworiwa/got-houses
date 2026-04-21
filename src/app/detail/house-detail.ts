@@ -4,9 +4,9 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { HousesStore } from '../houses.store';
-import { FavoritesStore } from '../../favorites/favorites.store';
-import { houseIdFromUrl } from '../../../core/models/house.model';
+import { HousesStore } from '../core/stores/houses.store';
+import { FavoritesStore } from '../core/stores/favorites.store';
+import { houseIdFromUrl } from '../core/models/house.model';
 
 @Component({
   selector: 'app-house-detail',
