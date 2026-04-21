@@ -1,4 +1,10 @@
-import { ChangeDetectionStrategy, Component, inject, OnDestroy, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  inject,
+  OnInit,
+} from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
@@ -8,7 +14,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
-import { Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import {
   loadHouses,
@@ -26,6 +31,7 @@ import {
   selectPagination,
   selectSearchMode,
 } from '../../../store/houses/houses.selectors';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-houses-list',
@@ -42,9 +48,9 @@ import {
     MatButtonToggleModule,
   ],
 })
-export class HousesListComponent implements OnInit, OnDestroy {
+export class HousesListComponent implements OnInit {
   private readonly store = inject(Store);
-  private subscription?: Subscription;
+  private destroyRef = inject(DestroyRef);
 
   protected readonly displayedColumns = ['name', 'region', 'words', 'seats'];
   protected readonly searchControl = new FormControl('');
@@ -60,29 +66,27 @@ export class HousesListComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.store.dispatch(loadHouses({ page: 1, pageSize: 10 }));
 
-    this.subscription = this.searchControl.valueChanges.pipe(
-      debounceTime(400),
-      distinctUntilChanged(),
-    ).subscribe(value => {
-      const term = value ?? '';
-      if (this.searchMode() === 'contains') {
-        this.store.dispatch(setSearchName({ name: term }));
-      } else {
-        this.store.dispatch(loadHouses({
-          page: 1,
-          pageSize: this.pagination().pageSize,
-          name: term,
-        }));
-      }
-    });
+    this.searchControl.valueChanges
+      .pipe(takeUntilDestroyed(this.destroyRef), debounceTime(400), distinctUntilChanged())
+      .subscribe((value) => {
+        const term = value ?? '';
+        if (this.searchMode() === 'partial') {
+          this.store.dispatch(setSearchName({ name: term }));
+        } else {
+          this.store.dispatch(
+            loadHouses({
+              page: 1,
+              pageSize: this.pagination().pageSize,
+              name: term,
+            }),
+          );
+        }
+      });
   }
 
-  ngOnDestroy(): void {
-    this.subscription?.unsubscribe();
-  }
-
-  protected onModeChange(mode: SearchMode): void {
+  protected onSearchModeChange(mode: SearchMode): void {
     this.store.dispatch(setSearchMode({ mode }));
+
     const term = this.searchControl.value ?? '';
     if (term) {
       this.store.dispatch(setSearchName({ name: term }));
@@ -90,14 +94,16 @@ export class HousesListComponent implements OnInit, OnDestroy {
   }
 
   protected onPageChange(event: PageEvent): void {
-    if (this.searchMode() === 'contains') {
+    if (this.searchMode() === 'partial') {
       this.store.dispatch(setContainsPage({ page: event.pageIndex + 1, pageSize: event.pageSize }));
     } else {
-      this.store.dispatch(loadHouses({
-        page: event.pageIndex + 1,
-        pageSize: event.pageSize,
-        name: this.name(),
-      }));
+      this.store.dispatch(
+        loadHouses({
+          page: event.pageIndex + 1,
+          pageSize: event.pageSize,
+          name: this.name(),
+        }),
+      );
     }
   }
 }

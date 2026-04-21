@@ -45,7 +45,7 @@ export const housesReducer = createReducer(
     loading: false,
     error,
   })),
-  on(HousesActions.loadAllHouses, state => ({
+  on(HousesActions.loadAllHouses, (state) => ({
     ...state,
     loading: true,
     error: null,

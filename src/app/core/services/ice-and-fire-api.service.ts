@@ -16,22 +16,24 @@ export class IceAndFireApiService {
   private readonly http = inject(HttpClient);
   private readonly BASE = 'https://anapioficeandfire.com/api';
 
-  getHouses(page: number, pageSize: number, name = ''): Observable<{ houses: House[]; pagination: PaginationMeta }> {
+  getHouses(
+    page: number,
+    pageSize: number,
+    name = '',
+  ): Observable<{ houses: House[]; pagination: PaginationMeta }> {
     const params: Record<string, string | number> = { page, pageSize };
     if (name) params['name'] = name;
 
-    return this.http
-      .get<House[]>(`${this.BASE}/houses`, { params, observe: 'response' })
-      .pipe(
-        map(response => ({
-          houses: response.body ?? [],
-          pagination: {
-            currentPage: page,
-            pageSize,
-            totalCount: this.parseTotalCount(response.headers.get('Link'), page, pageSize),
-          },
-        })),
-      );
+    return this.http.get<House[]>(`${this.BASE}/houses`, { params, observe: 'response' }).pipe(
+      map((response) => ({
+        houses: response.body ?? [],
+        pagination: {
+          currentPage: page,
+          pageSize,
+          totalCount: this.parseTotalCount(response.headers.get('Link'), page, pageSize),
+        },
+      })),
+    );
   }
 
   getAllHouses(): Observable<House[]> {
@@ -52,7 +54,7 @@ export class IceAndFireApiService {
         observe: 'response',
       })
       .pipe(
-        map(response => ({
+        map((response) => ({
           houses: response.body ?? [],
           hasNext: this.hasNextLink(response.headers.get('Link')),
           nextPage: page + 1,
@@ -62,10 +64,14 @@ export class IceAndFireApiService {
 
   private hasNextLink(linkHeader: string | null): boolean {
     if (!linkHeader) return false;
-    return linkHeader.split(',').some(part => part.trim().split(';')[1]?.trim() === 'rel="next"');
+    return linkHeader.split(',').some((part) => part.trim().split(';')[1]?.trim() === 'rel="next"');
   }
 
-  private parseTotalCount(linkHeader: string | null, currentPage: number, pageSize: number): number {
+  private parseTotalCount(
+    linkHeader: string | null,
+    currentPage: number,
+    pageSize: number,
+  ): number {
     if (!linkHeader) return currentPage * pageSize;
 
     for (const part of linkHeader.split(',')) {
