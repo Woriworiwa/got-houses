@@ -1,0 +1,52 @@
+<div class="w-full max-w-2xl relative">
+  <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline pointer-events-none z-10" aria-hidden="true">search</span>
+  <input
+    [formControl]="searchControl"
+    [placeholder]="placeholder()"
+    class="w-full bg-surface-container-lowest border-b-2 border-outline-variant focus:border-primary-container px-12 py-5 font-inter text-body-lg text-on-surface transition-all outline-none"
+    [class.rounded-t-lg]="showDropdown()"
+    [class.rounded-lg]="!showDropdown()"
+    aria-label="Search houses"
+    aria-autocomplete="list"
+    aria-controls="autocomplete-listbox"
+    [attr.aria-expanded]="showDropdown()"
+    type="search"
+    autocomplete="off"
+    (focus)="onFocus()"
+    (blur)="onBlur()"
+  />
+
+  @if (showDropdown()) {
+    <ul
+      id="autocomplete-listbox"
+      role="listbox"
+      aria-label="House suggestions"
+      class="absolute z-50 w-full bg-surface-container-lowest border border-t-0 border-outline-variant rounded-b-lg shadow-lg max-h-80 overflow-y-auto"
+    >
+      @if (!allHousesLoaded()) {
+        <li class="px-4 py-4 font-inter text-body-md text-on-surface-variant text-center" aria-live="polite">
+          Loading houses…
+        </li>
+      } @else if (suggestions().length === 0) {
+        <li class="px-4 py-4 font-inter text-body-md text-on-surface-variant text-center">
+          No houses found
+        </li>
+      } @else {
+        @for (house of suggestions(); track house.url) {
+          <li role="option">
+            <button
+              type="button"
+              class="w-full text-left px-4 py-3 font-inter text-body-md text-on-surface hover:bg-surface-container transition-colors focus:outline-none focus-visible:bg-surface-container"
+              (click)="onSuggestionClick(house)"
+            >
+              <span class="block font-medium">{{ house.name }}</span>
+              @if (house.region) {
+                <span class="block text-label-sm text-on-surface-variant">{{ house.region }}</span>
+              }
+            </button>
+          </li>
+        }
+      }
+    </ul>
+  }
+</div>
