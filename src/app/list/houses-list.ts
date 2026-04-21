@@ -5,13 +5,14 @@ import {
   DestroyRef,
   inject,
   OnInit,
+  signal,
 } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { houseIdFromUrl } from '../core/models/house.model';
-import { HousesStore, SearchMode } from '../core/stores/houses.store';
+import { House, houseIdFromUrl } from '../core/models/house.model';
+import { HousesStore } from '../core/stores/houses.store';
 import { FavoritesStore } from '../core/stores/favorites.store';
 
 @Component({
@@ -27,14 +28,14 @@ export class HousesListComponent implements OnInit {
 
   protected readonly houseIdFromUrl = houseIdFromUrl;
   protected readonly searchControl = new FormControl('');
+  protected readonly showDropdown = signal(false);
 
-  protected readonly houses = this.store.displayedHouses;
+  protected readonly houses = this.store.currentPageHouses;
   protected readonly loading = this.store.loading;
   protected readonly error = this.store.error;
   protected readonly pagination = this.store.pagination;
-  protected readonly totalCount = this.store.displayTotalCount;
-  protected readonly name = this.store.name;
-  protected readonly searchMode = this.store.searchMode;
+  protected readonly totalCount = computed(() => this.store.pagination().totalCount);
+  protected readonly autocompleteSuggestions = this.store.containsFiltered;
 
   protected readonly totalPages = computed(() =>
     Math.max(1, Math.ceil(this.totalCount() / this.pagination().pageSize)),
@@ -63,35 +64,38 @@ export class HousesListComponent implements OnInit {
     this.store.loadHouses({ page: 1, pageSize: 10 });
 
     this.searchControl.valueChanges
-      .pipe(takeUntilDestroyed(this.destroyRef), debounceTime(400), distinctUntilChanged())
+      .pipe(takeUntilDestroyed(this.destroyRef), debounceTime(300), distinctUntilChanged())
       .subscribe((value) => {
         const term = value ?? '';
-        if (this.searchMode() === 'partial') {
-          this.store.setSearchName(term);
-        } else {
-          this.store.loadHouses({
-            page: 1,
-            pageSize: this.pagination().pageSize,
-            name: term,
-          });
+        this.store.setSearchName(term);
+        this.showDropdown.set(!!term.trim());
+        if (!term.trim()) {
+          this.store.loadHouses({ page: 1, pageSize: this.pagination().pageSize });
         }
       });
   }
 
-  protected onSearchModeChange(mode: SearchMode): void {
-    this.store.setSearchMode(mode);
-    const term = this.searchControl.value ?? '';
-    if (term) {
-      this.store.setSearchName(term);
+  protected onSearchFocus(): void {
+    if (!this.store.allHousesLoaded()) {
+      this.store.loadAllHouses();
     }
+    if (this.searchControl.value?.trim()) {
+      this.showDropdown.set(true);
+    }
+  }
+
+  protected onSearchBlur(): void {
+    setTimeout(() => this.showDropdown.set(false), 200);
+  }
+
+  protected onSuggestionSelect(house: House): void {
+    this.showDropdown.set(false);
+    this.searchControl.setValue(house.name, { emitEvent: false });
+    this.store.loadHouses({ page: 1, pageSize: this.pagination().pageSize, name: house.name });
   }
 
   protected onPageChange(page: number): void {
     const { pageSize } = this.pagination();
-    if (this.searchMode() === 'partial') {
-      this.store.setContainsPage(page, pageSize);
-    } else {
-      this.store.loadHouses({ page, pageSize, name: this.name() });
-    }
+    this.store.loadHouses({ page, pageSize, name: this.store.name() });
   }
 }

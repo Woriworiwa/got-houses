@@ -60,9 +60,8 @@ describe('HousesStore', () => {
       expect(store.ids()).toEqual([]);
     });
 
-    it('starts with searchMode exact and page 1', () => {
+    it('starts with page 1', () => {
       const store = setup();
-      expect(store.searchMode()).toBe('exact');
       expect(store.pagination().currentPage).toBe(1);
     });
 
@@ -71,9 +70,9 @@ describe('HousesStore', () => {
       expect(store.entities()).toEqual([]);
     });
 
-    it('displayedHouses computed returns empty array', () => {
+    it('currentPageHouses computed returns empty array', () => {
       const store = setup();
-      expect(store.displayedHouses()).toEqual([]);
+      expect(store.currentPageHouses()).toEqual([]);
     });
 
     it('selectedHouse returns null when no ID set', () => {
@@ -269,120 +268,13 @@ describe('HousesStore', () => {
     });
   });
 
-  // ── computed: displayedHouses ─────────────────────────────────────────────
-
-  describe('displayedHouses computed', () => {
-    it('returns currentPageHouses in exact mode', () => {
-      const houses = [makeHouse('House Stark', 1)];
-      mockApi.getHouses.mockReturnValue(of({ houses, pagination }));
-
-      const store = setup();
-      store.loadHouses({ page: 1, pageSize: 10 });
-
-      expect(store.displayedHouses()).toEqual(houses);
-    });
-
-    it('returns paginated containsFiltered slice in partial mode', () => {
-      const houses = Array.from({ length: 15 }, (_, i) => makeHouse(`House ${String.fromCharCode(65 + i)}`, i + 1));
-      mockApi.getAllHouses.mockReturnValue(of(houses));
-
-      const store = setup();
-      store.setSearchMode('partial');
-
-      expect(store.displayedHouses()).toHaveLength(10);
-      store.setContainsPage(2, 10);
-      expect(store.displayedHouses()).toHaveLength(5);
-    });
-  });
-
-  // ── computed: displayTotalCount ───────────────────────────────────────────
-
-  describe('displayTotalCount computed', () => {
-    it('returns pagination.totalCount in exact mode', () => {
-      mockApi.getHouses.mockReturnValue(of({ houses: [], pagination: { currentPage: 1, pageSize: 10, totalCount: 444 } }));
-      const store = setup();
-      store.loadHouses({ page: 1, pageSize: 10 });
-      expect(store.displayTotalCount()).toBe(444);
-    });
-
-    it('returns filtered count in partial mode', () => {
-      const houses = [makeHouse('House Stark', 1), makeHouse('House Lannister', 2)];
-      mockApi.getAllHouses.mockReturnValue(of(houses));
-
-      const store = setup();
-      store.loadAllHouses();
-      store.setSearchMode('partial');
-      store.setSearchName('stark');
-
-      expect(store.displayTotalCount()).toBe(1);
-    });
-  });
-
-  // ── setSearchMode ─────────────────────────────────────────────────────────
-
-  describe('setSearchMode', () => {
-    it('switching to partial triggers loadAllHouses when not yet loaded', () => {
-      mockApi.getAllHouses.mockReturnValue(of([]));
-      const store = setup();
-      store.setSearchMode('partial');
-      expect(mockApi.getAllHouses).toHaveBeenCalledTimes(1);
-    });
-
-    it('switching to partial does not call getAllHouses when already loaded', () => {
-      mockApi.getAllHouses.mockReturnValue(of([]));
-      const store = setup();
-      store.setSearchMode('partial'); // loads
-      vi.clearAllMocks();
-      store.setSearchMode('exact');
-      mockApi.getHouses.mockReturnValue(of({ houses: [], pagination }));
-      store.setSearchMode('partial'); // already loaded — no extra call
-      expect(mockApi.getAllHouses).not.toHaveBeenCalled();
-    });
-
-    it('switching to exact dispatches loadHouses with page 1 and current name', () => {
-      mockApi.getHouses.mockReturnValue(of({ houses: [], pagination }));
-      mockApi.getAllHouses.mockReturnValue(of([]));
-
-      const store = setup();
-      store.loadHouses({ page: 1, pageSize: 10, name: 'lannister' });
-      store.setSearchMode('partial');
-      vi.clearAllMocks();
-
-      mockApi.getHouses.mockReturnValue(of({ houses: [], pagination }));
-      store.setSearchMode('exact');
-
-      expect(mockApi.getHouses).toHaveBeenCalledWith(1, 10, 'lannister');
-    });
-
-    it('resets currentPage to 1 on mode change', () => {
-      mockApi.getAllHouses.mockReturnValue(of([]));
-      const store = setup();
-      store.setContainsPage(3, 10);
-      store.setSearchMode('partial');
-      expect(store.pagination().currentPage).toBe(1);
-    });
-  });
-
   // ── setSearchName ─────────────────────────────────────────────────────────
 
   describe('setSearchName', () => {
-    it('updates name and resets page to 1', () => {
+    it('updates name', () => {
       const store = setup();
-      store.setContainsPage(3, 10);
       store.setSearchName('dragon');
       expect(store.name()).toBe('dragon');
-      expect(store.pagination().currentPage).toBe(1);
-    });
-  });
-
-  // ── setContainsPage ───────────────────────────────────────────────────────
-
-  describe('setContainsPage', () => {
-    it('updates currentPage and pageSize', () => {
-      const store = setup();
-      store.setContainsPage(4, 25);
-      expect(store.pagination().currentPage).toBe(4);
-      expect(store.pagination().pageSize).toBe(25);
     });
   });
 });

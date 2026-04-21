@@ -8,8 +8,6 @@ import { House, houseIdFromUrl } from '../models/house.model';
 import { PaginationMeta } from '../models/pagination.model';
 import { IceAndFireApiService } from '../services/ice-and-fire-api.service';
 
-export type SearchMode = 'exact' | 'partial';
-
 function extractErrorMessage(err: unknown): string {
   if (err instanceof HttpErrorResponse) {
     return `${err.status} ${err.statusText}`;
@@ -49,7 +47,6 @@ export const HousesStore = signalStore(
     error: null as string | null,
     pagination: { currentPage: 1, pageSize: 10, totalCount: 0 } as PaginationMeta,
     name: '',
-    searchMode: 'exact' as SearchMode,
     selectedHouseId: null as number | null,
     selectedHouseLoading: false,
     selectedHouseError: null as string | null,
@@ -65,7 +62,6 @@ export const HousesStore = signalStore(
     }),
   })),
 
-  // containsFiltered depends on entities, so it needs its own withComputed block
   withComputed((store) => ({
     containsFiltered: computed((): House[] => {
       if (!store.allHousesLoaded()) return [];
@@ -74,24 +70,6 @@ export const HousesStore = signalStore(
       if (!term) return all;
       return all.filter((h) => h.name.toLowerCase().includes(term));
     }),
-  })),
-
-  withComputed((store) => ({
-    displayedHouses: computed((): House[] => {
-      if (store.searchMode() === 'partial') {
-        const pg = store.pagination();
-        const start = (pg.currentPage - 1) * pg.pageSize;
-        return store.containsFiltered().slice(start, start + pg.pageSize);
-      }
-      return store.currentPageHouses();
-    }),
-
-    displayTotalCount: computed((): number =>
-      store.searchMode() === 'partial'
-        ? store.containsFiltered().length
-        : store.pagination().totalCount,
-    ),
-
     selectedHouse: computed((): House | null => {
       const id = store.selectedHouseId();
       if (id === null) return null;
@@ -196,31 +174,8 @@ export const HousesStore = signalStore(
       loadHouseDetail,
       preloadHouse,
 
-      setSearchMode(mode: SearchMode): void {
-        patchState(store, {
-          searchMode: mode,
-          pagination: { ...store.pagination(), currentPage: 1 },
-        });
-        if (mode === 'partial') {
-          if (!store.allHousesLoaded()) {
-            loadAllHouses();
-          }
-        } else {
-          loadHouses({ page: 1, pageSize: 10, name: store.name() });
-        }
-      },
-
       setSearchName(name: string): void {
-        patchState(store, {
-          name,
-          pagination: { ...store.pagination(), currentPage: 1 },
-        });
-      },
-
-      setContainsPage(page: number, pageSize: number): void {
-        patchState(store, {
-          pagination: { ...store.pagination(), currentPage: page, pageSize },
-        });
+        patchState(store, { name });
       },
     };
   }),
