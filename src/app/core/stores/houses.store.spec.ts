@@ -8,8 +8,6 @@ import { IceAndFireApiService } from '../services/ice-and-fire-api.service';
 import { House, houseIdFromUrl } from '../models/house.model';
 import { PaginationMeta } from '../models/pagination.model';
 
-// ── fixtures ──────────────────────────────────────────────────────────────────
-
 const makeHouse = (name: string, id = 1): House => ({
   url: `https://anapioficeandfire.com/api/houses/${id}`,
   name,
@@ -37,8 +35,6 @@ const mockApi = {
   getHouse: vi.fn(),
 };
 
-// ── helpers ───────────────────────────────────────────────────────────────────
-
 function setup() {
   TestBed.configureTestingModule({
     providers: [{ provide: IceAndFireApiService, useValue: mockApi }],
@@ -46,12 +42,8 @@ function setup() {
   return TestBed.inject(HousesStore);
 }
 
-// ── tests ─────────────────────────────────────────────────────────────────────
-
 describe('HousesStore', () => {
   beforeEach(() => vi.clearAllMocks());
-
-  // ── initial state ──────────────────────────────────────────────────────────
 
   describe('initial state', () => {
     it('has empty entity map and ids', () => {
@@ -80,8 +72,6 @@ describe('HousesStore', () => {
       expect(store.selectedHouse()).toBeNull();
     });
   });
-
-  // ── loadHouses ────────────────────────────────────────────────────────────
 
   describe('loadHouses', () => {
     it('upserts houses and updates pagination on success', () => {
@@ -153,8 +143,6 @@ describe('HousesStore', () => {
     });
   });
 
-  // ── loadAllHouses ─────────────────────────────────────────────────────────
-
   describe('loadAllHouses', () => {
     it('loads all houses and sets allHousesLoaded', () => {
       const houses = [makeHouse('House Stark', 1), makeHouse('House Lannister', 2)];
@@ -176,8 +164,6 @@ describe('HousesStore', () => {
       expect(store.allHousesLoaded()).toBe(false);
     });
   });
-
-  // ── loadHouseDetail ───────────────────────────────────────────────────────
 
   describe('loadHouseDetail', () => {
     it('fetches from API and sets selectedHouseId when not cached', () => {
@@ -217,8 +203,6 @@ describe('HousesStore', () => {
     });
   });
 
-  // ── computed: entities ────────────────────────────────────────────────────
-
   describe('entities computed', () => {
     it('returns houses in insertion order', () => {
       const stark = makeHouse('House Stark', 1);
@@ -232,8 +216,6 @@ describe('HousesStore', () => {
       expect(store.entities()[1]).toEqual(lannister);
     });
   });
-
-  // ── computed: containsFiltered ────────────────────────────────────────────
 
   describe('containsFiltered computed', () => {
     it('returns empty array before allHousesLoaded', () => {
@@ -267,8 +249,6 @@ describe('HousesStore', () => {
       expect(store.containsFiltered()[0].name).toBe('House Stark');
     });
   });
-
-  // ── setSearchName ─────────────────────────────────────────────────────────
 
   describe('setSearchName', () => {
     it('updates name', () => {

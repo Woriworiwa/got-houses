@@ -16,8 +16,6 @@ describe('FavoritesStore', () => {
     vi.restoreAllMocks();
   });
 
-  // ── initial state ──────────────────────────────────────────────────────────
-
   describe('initial state', () => {
     it('starts with empty favoriteIds when localStorage is empty', () => {
       const store = setup();
@@ -31,8 +29,6 @@ describe('FavoritesStore', () => {
       expect(store.favoriteIds()).toEqual([]);
     });
   });
-
-  // ── favoriteCount computed ─────────────────────────────────────────────────
 
   describe('favoriteCount', () => {
     it('returns 0 when there are no favorites', () => {
@@ -59,8 +55,6 @@ describe('FavoritesStore', () => {
     });
   });
 
-  // ── favoriteIdSet computed ─────────────────────────────────────────────────
-
   describe('favoriteIdSet', () => {
     it('returns an empty Set when there are no favorites', () => {
       const store = setup();
@@ -84,8 +78,6 @@ describe('FavoritesStore', () => {
       expect(store.favoriteIdSet().has(7)).toBe(false);
     });
   });
-
-  // ── toggleFavorite ─────────────────────────────────────────────────────────
 
   describe('toggleFavorite', () => {
     it('adds an id that is not yet in favorites', () => {
