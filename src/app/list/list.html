@@ -5,7 +5,7 @@
 
     <app-search
       [suggestions]="autocompleteSuggestions()"
-      [allHousesLoaded]="store.allHousesLoaded()"
+      [allHousesLoaded]="housesStore.allHousesLoaded()"
       (focused)="onSearchFocus()"
       (searchChange)="onSearchChange($event)"
       (suggestionSelect)="onSuggestionSelect($event)"

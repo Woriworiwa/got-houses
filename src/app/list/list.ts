@@ -19,43 +19,43 @@ import { SearchComponent } from '../shared/search/search';
   imports: [RouterLink, PaginationComponent, SearchComponent],
 })
 export class HousesListComponent implements OnInit {
-  protected readonly store = inject(HousesStore);
+  protected readonly housesStore = inject(HousesStore);
   protected readonly favoritesStore = inject(FavoritesStore);
 
   protected readonly houseIdFromUrl = houseIdFromUrl;
 
-  protected readonly houses = this.store.currentPageHouses;
-  protected readonly loading = this.store.loading;
-  protected readonly error = this.store.error;
-  protected readonly pagination = this.store.pagination;
-  protected readonly autocompleteSuggestions = this.store.containsFiltered;
+  protected readonly houses = this.housesStore.currentPageHouses;
+  protected readonly loading = this.housesStore.loading;
+  protected readonly error = this.housesStore.error;
+  protected readonly pagination = this.housesStore.pagination;
+  protected readonly autocompleteSuggestions = this.housesStore.containsFiltered;
 
   protected readonly totalPages = computed(() =>
-    Math.max(1, Math.ceil(this.store.pagination().totalCount / this.pagination().pageSize)),
+    Math.max(1, Math.ceil(this.housesStore.pagination().totalCount / this.pagination().pageSize)),
   );
 
   ngOnInit(): void {
-    this.store.loadHouses({ page: 1, pageSize: 9 });
+    this.housesStore.loadHouses({ page: 1, pageSize: 9 });
   }
 
   protected onSearchFocus(): void {
-    if (!this.store.allHousesLoaded()) {
-      this.store.loadAllHouses();
+    if (!this.housesStore.allHousesLoaded()) {
+      this.housesStore.loadAllHouses();
     }
   }
 
   protected onSearchChange(term: string): void {
-    this.store.setSearchName(term);
+    this.housesStore.setSearchName(term);
     if (!term) {
-      this.store.loadHouses({ page: 1, pageSize: this.pagination().pageSize });
+      this.housesStore.loadHouses({ page: 1, pageSize: this.pagination().pageSize });
     }
   }
 
   protected onSuggestionSelect(house: House): void {
-    this.store.loadHouses({ page: 1, pageSize: this.pagination().pageSize, name: house.name });
+    this.housesStore.loadHouses({ page: 1, pageSize: this.pagination().pageSize, name: house.name });
   }
 
   protected onPageChange(page: number): void {
-    this.store.loadHouses({ page, pageSize: this.pagination().pageSize, name: this.store.name() });
+    this.housesStore.loadHouses({ page, pageSize: this.pagination().pageSize, name: this.housesStore.name() });
   }
 }

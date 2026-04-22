@@ -22,7 +22,9 @@ export class IceAndFireApiService {
     name = '',
   ): Observable<{ houses: House[]; pagination: PaginationMeta }> {
     const params: Record<string, string | number> = { page, pageSize };
-    if (name) params['name'] = name;
+    if (name) {
+      params['name'] = name;
+    }
 
     return this.http.get<House[]>(`${this.BASE}/houses`, { params, observe: 'response' }).pipe(
       map((response) => ({
