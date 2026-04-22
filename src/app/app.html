@@ -1,1 +1,70 @@
-<router-outlet />
+<header class="bg-surface sticky top-0 z-50 border-b border-outline-variant shadow-sm" role="banner">
+  <div class="max-w-7xl mx-auto px-6 md:px-12 py-4 flex items-center justify-between">
+    <a
+      routerLink="/houses"
+      class="text-2xl font-newsreader font-bold text-on-surface hover:text-primary transition-colors"
+      aria-label="Westeros Catalog home"
+    >Westeros Catalog</a>
+
+    <nav class="hidden md:flex items-center gap-8 text-on-surface-variant" aria-label="Main navigation">
+      <a
+        routerLink="/houses"
+        routerLinkActive="!text-primary border-b-2 border-primary"
+        [routerLinkActiveOptions]="{ exact: false }"
+        class="font-inter font-semibold pb-1 transition-colors hover:text-on-surface"
+      >Houses</a>
+      <a
+        routerLink="/favorites"
+        routerLinkActive="!text-primary border-b-2 border-primary"
+        [routerLinkActiveOptions]="{ exact: false }"
+        class="font-inter pb-1 transition-colors hover:text-on-surface inline-flex items-center gap-2"
+      >
+        Favorites
+        @if (favoriteCount() > 0) {
+          <span
+            class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-primary text-on-primary text-[10px] font-bold leading-none"
+            aria-label="{{ favoriteCount() }} saved">
+                {{ favoriteCount() > 99 ? '99+' : favoriteCount() }}
+              </span>
+        }
+      </a>
+      <div class="flex items-center gap-1 ml-2">
+        <button class="p-2 rounded-md hover:bg-surface-container transition-colors" aria-label="Account" type="button">
+          <span class="material-symbols-outlined" aria-hidden="true">account_circle</span>
+        </button>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<div class="pb-24 md:pb-0">
+  <router-outlet />
+</div>
+
+<nav
+  class="md:hidden fixed bottom-0 inset-x-0 z-50 bg-surface border-t border-outline-variant shadow-[0_-4px_12px_rgba(0,0,0,0.04)] rounded-t-lg"
+  aria-label="Mobile navigation"
+>
+  <div class="flex justify-around items-center px-4 pt-2 pb-4">
+    <a
+      routerLink="/houses"
+      routerLinkActive="!text-on-surface bg-primary-container/20"
+      [routerLinkActiveOptions]="{ exact: false }"
+      class="flex flex-col items-center px-4 py-1 rounded-xl transition-colors text-on-surface-variant"
+      aria-label="Houses"
+    >
+      <span class="material-symbols-outlined" aria-hidden="true">castle</span>
+      <span class="text-[11px] font-newsreader font-medium tracking-wide uppercase mt-1">Houses</span>
+    </a>
+    <a
+      routerLink="/favorites"
+      routerLinkActive="!text-on-surface bg-primary-container/20"
+      [routerLinkActiveOptions]="{ exact: false }"
+      class="flex flex-col items-center px-4 py-1 rounded-xl transition-colors text-on-surface-variant"
+      aria-label="Favorites"
+    >
+      <span class="material-symbols-outlined" aria-hidden="true">favorite</span>
+      <span class="text-[11px] font-newsreader font-medium tracking-wide uppercase mt-1">Favorites</span>
+    </a>
+  </div>
+</nav>
