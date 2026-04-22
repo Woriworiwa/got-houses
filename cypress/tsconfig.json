@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "target": "ES2015",
+    "lib": ["ES2020", "dom"],
+    "types": ["cypress"],
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "strict": true
+  },
+  "include": ["**/*.ts"]
+}

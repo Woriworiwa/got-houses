@@ -1,0 +1,18 @@
+{
+  "url": "https://anapioficeandfire.com/api/houses/362",
+  "name": "House Stark of Winterfell",
+  "region": "The North",
+  "coatOfArms": "A grey direwolf on a white field",
+  "words": "Winter is Coming",
+  "titles": ["King in the North", "Lord of Winterfell", "Warden of the North"],
+  "seats": ["Winterfell"],
+  "currentLord": "",
+  "heir": "",
+  "overlord": "",
+  "founded": "Age of Heroes",
+  "founder": "Bran the Builder",
+  "diedOut": "",
+  "ancestralWeapons": ["Ice"],
+  "cadetBranches": [],
+  "swornMembers": []
+}
