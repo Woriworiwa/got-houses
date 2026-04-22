@@ -5,18 +5,18 @@ import {
   inject,
   OnInit,
 } from '@angular/core';
-import { RouterLink } from '@angular/router';
 import { House, houseIdFromUrl } from '../core/models/house.model';
 import { HousesStore } from '../core/stores/houses.store';
 import { FavoritesStore } from '../core/stores/favorites.store';
 import { PaginationComponent } from '../shared/pagination/pagination';
 import { SearchComponent } from '../shared/search/search';
+import { HouseCardComponent } from '../shared/house-card/house-card';
 
 @Component({
   selector: 'app-houses-list',
   templateUrl: './list.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterLink, PaginationComponent, SearchComponent],
+  imports: [PaginationComponent, SearchComponent, HouseCardComponent],
 })
 export class HousesListComponent implements OnInit {
   protected readonly housesStore = inject(HousesStore);

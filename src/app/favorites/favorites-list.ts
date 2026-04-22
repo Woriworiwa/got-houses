@@ -3,12 +3,13 @@ import { RouterLink } from '@angular/router';
 import { House, houseIdFromUrl } from '../core/models/house.model';
 import { HousesStore } from '../core/stores/houses.store';
 import { FavoritesStore } from '../core/stores/favorites.store';
+import { HouseCardComponent } from '../shared/house-card/house-card';
 
 @Component({
   selector: 'app-favorites-list',
   templateUrl: './favorites-list.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterLink],
+  imports: [RouterLink, HouseCardComponent],
 })
 export class FavoritesListComponent {
   protected readonly favoritesStore = inject(FavoritesStore);

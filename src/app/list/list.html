@@ -26,42 +26,12 @@
       aria-label="Houses of Westeros"
     >
       @for (house of houses(); track house.url) {
-        <article class="bg-surface-container-lowest rounded-xl p-5 shadow-[0_12px_12px_rgba(30,35,43,0.04)] border border-outline-variant relative hover:shadow-[0_12px_24px_rgba(201,169,97,0.1)] transition-all text-center">
-
-          @if (house.region) {
-            <span class="block font-inter text-label-sm text-primary-container uppercase tracking-widest mb-2">
-              {{ house.region }}
-            </span>
-          }
-
-          <h2 class="font-newsreader text-headline-md text-on-surface mb-3">
-            <a
-              [routerLink]="[houseIdFromUrl(house.url)]"
-              class="after:absolute after:inset-0 after:content-[''] after:rounded-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-            >{{ house.name }}</a>
-          </h2>
-
-          <div class="w-10 h-0.5 bg-primary-container mb-4 mx-auto" aria-hidden="true"></div>
-
-          @if (house.words) {
-            <p class="font-newsreader text-body-lg italic text-on-surface-variant opacity-80">"{{ house.words }}"</p>
-          } @else if (house.seats[0]) {
-            <p class="font-inter text-body-md text-on-surface-variant">{{ house.seats[0] }}</p>
-          }
-
-          <button
-            type="button"
-            class="absolute top-4 right-4 z-10 text-stone-400 hover:text-primary transition-colors"
-            [attr.aria-label]="favoritesStore.favoriteIdSet().has(houseIdFromUrl(house.url)) ? 'Remove ' + house.name + ' from favorites' : 'Add ' + house.name + ' to favorites'"
-            (click)="favoritesStore.toggleFavorite(houseIdFromUrl(house.url))"
-          >
-            <span
-              class="material-symbols-outlined"
-              [class.icon-filled]="favoritesStore.favoriteIdSet().has(houseIdFromUrl(house.url))"
-              aria-hidden="true"
-            >favorite</span>
-          </button>
-        </article>
+        <app-house-card
+          [house]="house"
+          [isFavorite]="favoritesStore.favoriteIdSet().has(houseIdFromUrl(house.url))"
+          [detailLink]="[houseIdFromUrl(house.url)]"
+          (favoriteToggle)="favoritesStore.toggleFavorite(houseIdFromUrl(house.url))"
+        />
       }
     </section>
 
