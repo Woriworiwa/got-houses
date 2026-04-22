@@ -3,7 +3,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { signalStore, withState, withComputed, withMethods, patchState } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { EMPTY, pipe } from 'rxjs';
-import { switchMap, tap, catchError } from 'rxjs/operators';
+import { switchMap, mergeMap, tap, catchError } from 'rxjs/operators';
 import { House, houseIdFromUrl } from '../models/house.model';
 import { PaginationMeta } from '../models/pagination.model';
 import { IceAndFireApiService } from '../services/ice-and-fire-api.service';
@@ -157,7 +157,7 @@ export const HousesStore = signalStore(
 
     const preloadHouse = rxMethod<number>(
       pipe(
-        switchMap((id) => {
+        mergeMap((id) => {
           if (store.entityMap()[id]) return EMPTY;
           return api.getHouse(id).pipe(
             tap((house) => patchState(store, (state) => ({ ...upsertHouses(state, [house]) }))),
