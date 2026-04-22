@@ -5,7 +5,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 
 import { HousesStore } from './houses.store';
 import { IceAndFireApiService } from '../services/ice-and-fire-api.service';
-import { House, houseIdFromUrl } from '../models/house.model';
+import { House } from '../models/house.model';
 import { PaginationMeta } from '../models/pagination.model';
 
 const makeHouse = (name: string, id = 1): House => ({

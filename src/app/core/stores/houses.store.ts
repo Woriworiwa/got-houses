@@ -18,7 +18,7 @@ function extractErrorMessage(err: unknown): string {
   return String(err);
 }
 
-type EntitySlice = { entityMap: Record<number, House>; ids: number[] };
+interface EntitySlice { entityMap: Record<number, House>; ids: number[] }
 
 function upsertHouses(current: EntitySlice, incoming: House[]): EntitySlice {
   const entityMap = { ...current.entityMap };

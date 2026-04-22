@@ -40,7 +40,7 @@
         </li>
       } @else {
         @for (house of suggestions(); track house.url) {
-          <li role="option">
+          <li role="option" aria-selected="false">
             <button
               type="button"
               class="w-full text-left px-4 py-3 font-inter text-body-md text-on-surface hover:bg-surface-container transition-colors focus:outline-none focus-visible:bg-surface-container"
