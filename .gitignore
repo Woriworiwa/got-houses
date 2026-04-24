@@ -45,3 +45,4 @@ Thumbs.db
 /.claude/settings.local.json
 /PLAN.md
 /server/node_modules/
+/server/dist/
