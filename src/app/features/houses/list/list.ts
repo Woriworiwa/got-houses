@@ -5,12 +5,12 @@ import {
   inject,
   OnInit,
 } from '@angular/core';
-import { House, houseIdFromUrl } from '../core/models/house.model';
-import { HousesStore } from '../core/stores/houses.store';
-import { FavoritesStore } from '../core/stores/favorites.store';
-import { PaginationComponent } from '../shared/pagination/pagination';
-import { SearchComponent } from '../shared/search/search';
-import { HouseCardComponent } from '../shared/house-card/house-card';
+import { House, houseIdFromUrl } from '../../../core/models/house.model';
+import { HousesStore } from '../../../core/stores/houses.store';
+import { FavoritesStore } from '../../../core/stores/favorites.store';
+import { PaginationComponent } from '../../../shared/pagination/pagination';
+import { SearchComponent } from '../../../shared/search/search';
+import { HouseCardComponent } from '../../../shared/house-card/house-card';
 
 @Component({
   selector: 'app-houses-list',

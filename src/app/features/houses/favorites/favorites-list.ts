@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, computed, effect, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { House, houseIdFromUrl } from '../core/models/house.model';
-import { HousesStore } from '../core/stores/houses.store';
-import { FavoritesStore } from '../core/stores/favorites.store';
-import { HouseCardComponent } from '../shared/house-card/house-card';
+import { House, houseIdFromUrl } from '../../../core/models/house.model';
+import { HousesStore } from '../../../core/stores/houses.store';
+import { FavoritesStore } from '../../../core/stores/favorites.store';
+import { HouseCardComponent } from '../../../shared/house-card/house-card';
 
 @Component({
   selector: 'app-favorites-list',

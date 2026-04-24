@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, computed, effect, inject, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { HousesStore } from '../core/stores/houses.store';
-import { FavoritesStore } from '../core/stores/favorites.store';
-import { houseIdFromUrl } from '../core/models/house.model';
+import { HousesStore } from '../../../core/stores/houses.store';
+import { FavoritesStore } from '../../../core/stores/favorites.store';
+import { houseIdFromUrl } from '../../../core/models/house.model';
 
 @Component({
   selector: 'app-house-detail',

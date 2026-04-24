@@ -1,26 +1,27 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { AuthService } from '../core/services/auth.service';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
-  selector: 'app-login',
+  selector: 'app-register',
   imports: [ReactiveFormsModule, RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: './login.html',
+  templateUrl: './register.html',
 })
-export class LoginComponent {
+export class RegisterComponent {
   protected readonly authService = inject(AuthService);
 
   protected readonly form = new FormGroup({
+    name: new FormControl('', Validators.required),
     email: new FormControl('', [Validators.required, Validators.email]),
-    password: new FormControl('', Validators.required),
+    password: new FormControl('', [Validators.required, Validators.minLength(6)]),
   });
 
   protected submit(): void {
     this.form.markAllAsTouched();
     if (this.form.invalid) return;
-    const { email, password } = this.form.getRawValue();
-    this.authService.login(email!, password!);
+    const { name, email, password } = this.form.getRawValue();
+    this.authService.register(email!, password!, name!);
   }
 }

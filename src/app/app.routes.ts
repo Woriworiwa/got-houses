@@ -3,23 +3,23 @@ import { Routes } from '@angular/router';
 export const routes: Routes = [
   {
     path: 'login',
-    loadComponent: () => import('./login/login').then((m) => m.LoginComponent),
+    loadComponent: () => import('./features/authentication/login/login').then((m) => m.LoginComponent),
   },
   {
     path: 'register',
-    loadComponent: () => import('./register/register').then((m) => m.RegisterComponent),
+    loadComponent: () => import('./features/authentication/register/register').then((m) => m.RegisterComponent),
   },
   {
     path: 'houses',
-    loadComponent: () => import('./list/list').then((m) => m.HousesListComponent),
+    loadComponent: () => import('./features/houses/list/list').then((m) => m.HousesListComponent),
   },
   {
     path: 'houses/:id',
-    loadComponent: () => import('./detail/detail').then((m) => m.HouseDetailComponent),
+    loadComponent: () => import('./features/houses/detail/detail').then((m) => m.HouseDetailComponent),
   },
   {
     path: 'favorites',
-    loadComponent: () => import('./favorites/favorites-list').then((m) => m.FavoritesListComponent),
+    loadComponent: () => import('./features/houses/favorites/favorites-list').then((m) => m.FavoritesListComponent),
   },
   { path: '**', redirectTo: 'houses' },
 ];
