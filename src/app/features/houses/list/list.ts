@@ -57,5 +57,6 @@ export class HousesListComponent implements OnInit {
 
   protected onPageChange(page: number): void {
     this.housesStore.loadHouses({ page, pageSize: this.pagination().pageSize, name: this.housesStore.name() });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 }

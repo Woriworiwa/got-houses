@@ -12,18 +12,21 @@
     />
   </section>
 
-  @if (loading()) {
+  @if (loading() && houses().length === 0) {
     <div class="flex justify-center py-20" role="status" aria-label="Loading houses">
       <div class="w-12 h-12 border-4 border-primary-container border-t-primary rounded-full animate-spin"></div>
     </div>
   } @else if (error()) {
     <p class="text-error text-center py-12 font-inter text-body-md" role="alert">{{ error() }}</p>
-  } @else if (houses().length === 0) {
+  } @else if (!loading() && houses().length === 0) {
     <p class="text-center py-20 font-inter text-body-md text-on-surface-variant">No houses found.</p>
   } @else {
     <section
       class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter mb-20"
+      [class.opacity-50]="loading()"
+      [class.pointer-events-none]="loading()"
       aria-label="Houses of Westeros"
+      [attr.aria-busy]="loading()"
     >
       @for (house of houses(); track house.url) {
         <app-house-card
