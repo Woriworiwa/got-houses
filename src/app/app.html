@@ -9,14 +9,22 @@
     <nav class="hidden md:flex items-center gap-8 text-on-surface-variant" aria-label="Main navigation">
       <a
         routerLink="/houses"
-        routerLinkActive="!text-primary border-b-2 border-primary"
-        [routerLinkActiveOptions]="{ exact: false }"
+        routerLinkActive
+        #housesRla="routerLinkActive"
+        [routerLinkActiveOptions]="{ exact: true }"
+        [class.!text-primary]="housesRla.isActive && !navContext.fromFavorites()"
+        [class.border-b-2]="housesRla.isActive && !navContext.fromFavorites()"
+        [class.border-primary]="housesRla.isActive && !navContext.fromFavorites()"
         class="font-inter font-semibold pb-1 transition-colors hover:text-on-surface"
       >Houses</a>
       <a
         routerLink="/favorites"
-        routerLinkActive="!text-primary border-b-2 border-primary"
+        routerLinkActive
+        #favRla="routerLinkActive"
         [routerLinkActiveOptions]="{ exact: false }"
+        [class.!text-primary]="favRla.isActive || navContext.fromFavorites()"
+        [class.border-b-2]="favRla.isActive || navContext.fromFavorites()"
+        [class.border-primary]="favRla.isActive || navContext.fromFavorites()"
         class="font-inter pb-1 transition-colors hover:text-on-surface inline-flex items-center gap-2"
       >
         Favorites
@@ -61,8 +69,11 @@
   <div class="flex justify-around items-center px-4 pt-2 pb-4">
     <a
       routerLink="/houses"
-      routerLinkActive="!text-on-surface bg-primary-container/20"
-      [routerLinkActiveOptions]="{ exact: false }"
+      routerLinkActive
+      #housesRlaMobile="routerLinkActive"
+      [routerLinkActiveOptions]="{ exact: true }"
+      [class.!text-on-surface]="housesRlaMobile.isActive && !navContext.fromFavorites()"
+      [class.bg-primary-container\/20]="housesRlaMobile.isActive && !navContext.fromFavorites()"
       class="flex flex-col items-center px-4 py-1 rounded-xl transition-colors text-on-surface-variant"
       aria-label="Houses"
     >
@@ -71,8 +82,11 @@
     </a>
     <a
       routerLink="/favorites"
-      routerLinkActive="!text-on-surface bg-primary-container/20"
+      routerLinkActive
+      #favRlaMobile="routerLinkActive"
       [routerLinkActiveOptions]="{ exact: false }"
+      [class.!text-on-surface]="favRlaMobile.isActive || navContext.fromFavorites()"
+      [class.bg-primary-container\/20]="favRlaMobile.isActive || navContext.fromFavorites()"
       class="flex flex-col items-center px-4 py-1 rounded-xl transition-colors text-on-surface-variant"
       aria-label="Favorites"
     >

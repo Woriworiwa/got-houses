@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/cor
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { FavoritesStore } from './core/stores/favorites.store';
 import { AuthService } from './core/services/auth.service';
+import { NavigationContextService } from './core/services/navigation-context.service';
 
 @Component({
   selector: 'app-root',
@@ -13,6 +14,7 @@ export class App implements OnInit {
   private readonly favoritesStore = inject(FavoritesStore);
   protected readonly authService = inject(AuthService);
   protected readonly favoriteCount = this.favoritesStore.favoriteCount;
+  protected readonly navContext = inject(NavigationContextService);
 
   ngOnInit(): void {
     if (this.authService.getToken()) {
