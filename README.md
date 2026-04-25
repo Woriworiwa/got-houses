@@ -1,59 +1,56 @@
-# GotHouses
+# Got Houses
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.0.
+A browser for the Great Houses of Westeros, powered by the [An API of Ice and Fire](https://anapioficeandfire.com/).
 
-## Development server
+## Stack
 
-To start a local development server, run:
+**Frontend**
+- Angular 21 — standalone components, signals, lazy-loaded routes
+- NgRx Signal Store — state management
+- Tailwind CSS — styling
+- Material Symbols — icon font (no Angular Material components)
+- ESLint + Prettier — linting and formatting
+- Vitest + Cypress — unit and e2e tests
+
+**Backend**
+- Node.js + Express 5 — REST API at `http://localhost:3000`
+- JWT authentication with bcrypt password hashing
+- In-memory user store
+
+## Installation
+
+Install dependencies for both the frontend and the backend:
+
+```bash
+npm install
+cd server && npm install
+```
+
+## Running the app
+
+The backend must be running for authentication to work.
+
+**Start the backend** (from the `server/` directory):
+
+```bash
+npm run dev
+```
+
+**Start the frontend** (from the project root):
 
 ```bash
 ng serve
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Then open `http://localhost:4200`.
 
-## Code scaffolding
+## Authentication
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+The app includes optional registration and login. JWT tokens are stored in `localStorage` and restored on page load. Authentication is not enforced — all routes are accessible without an account.
 
-```bash
-ng generate component component-name
-```
+## Code quality
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+Husky runs two Git hooks automatically:
 
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+- **pre-commit** — runs the full test suite; the commit is blocked if any tests fail.
+- **commit-msg** — runs [commitlint](https://commitlint.js.org/) to enforce [Conventional Commits](https://www.conventionalcommits.org/) format (e.g. `feat:`, `fix:`, `refactor:`).
